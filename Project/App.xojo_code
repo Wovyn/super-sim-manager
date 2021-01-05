@@ -22,9 +22,23 @@ Inherits Application
 
 	#tag Event
 		Sub Open()
-		  
+		  if Settings.Lookup("TwilioAuthSID", "") = "" then
+		    // Not setup yet
+		    winSettings.Show
+		    
+		  end
 		End Sub
 	#tag EndEvent
+
+
+	#tag MenuHandler
+		Function EditPrefs() As Boolean Handles EditPrefs.Action
+			winSettings.Show
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
 
 
 	#tag Method, Flags = &h0

@@ -7,6 +7,17 @@ Begin Menu mbMain
       AutoEnabled = True
       AutoEnable = True
       Visible = True
+      Begin MenuItem FileClose
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "Close"
+         ShortcutKey = "W"
+         Shortcut = "Cmd+W"
+         MenuModifier = True
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
       Begin QuitMenuItem FileQuit
          SpecialMenu = 0
          Index = -2147483648
@@ -99,6 +110,25 @@ Begin Menu mbMain
          Text = "Select &All"
          ShortcutKey = "A"
          Shortcut = "Cmd+A"
+         MenuModifier = True
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
+      Begin MenuItem UntitledSeparator
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "-"
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
+      Begin PrefsMenuItem EditPrefs
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "Peferences..."
+         ShortcutKey = ","
+         Shortcut = "Cmd+,"
          MenuModifier = True
          AutoEnabled = True
          AutoEnable = True
