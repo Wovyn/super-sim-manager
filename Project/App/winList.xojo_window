@@ -23,7 +23,7 @@ Begin Window winList
    Title           =   "Twilio Super Sim Manager"
    Type            =   0
    Visible         =   False
-   Width           =   800
+   Width           =   1024
    Begin Twilio.Client oClient
       Index           =   -2147483648
       LockedInPosition=   False
@@ -72,7 +72,7 @@ Begin Window winList
       Hint            =   ""
       Index           =   -2147483648
       InitialParent   =   ""
-      Left            =   504
+      Left            =   728
       LockBottom      =   False
       LockedInPosition=   False
       LockLeft        =   False
@@ -139,7 +139,7 @@ Begin Window winList
       Transparent     =   False
       Underline       =   False
       Visible         =   True
-      Width           =   760
+      Width           =   984
       _ScrollWidth    =   -1
    End
    Begin ProgressWheel pwWait
