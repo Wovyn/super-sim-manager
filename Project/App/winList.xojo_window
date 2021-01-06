@@ -240,7 +240,48 @@ End
 		  // Load Listbox
 		  for each toSim as Twilio.Sim in oClient.aroSims
 		    // Handle search
-		    if tsSearch <> "" and toSim.sUniqueName.IndexOf(tsSearch) < 0 then continue
+		    if tsSearch <> "" then
+		      if  (toSim.sUniqueName.IndexOf(tsSearch) < 0) and _
+		        (toSim.sICCID.IndexOf(tsSearch) < 0) then
+		        
+		        // Check fleet
+		        if toSim.oFleet <> nil then
+		          if toSim.oFleet.sUniqueName.IndexOf(tsSearch) < 0 then
+		            
+		            // Check Network Access Profile
+		            if toSim.oFleet.oNetworkAccessProfile <> nil then
+		              if toSim.oFleet.oNetworkAccessProfile.sUniqueName.IndexOf(tsSearch) < 0 then
+		                // Not a match
+		                continue for toSim
+		                
+		              else
+		                // Allow: search match Network Access Profile
+		                
+		              end
+		              
+		            else
+		              // No Network Access Profile, not a match
+		              continue for toSim
+		              
+		            end
+		            
+		          else
+		            // Allow: search match Fleet
+		            
+		          end
+		          
+		        else
+		          // No fleet, not a match
+		          continue for toSim
+		          
+		        end
+		        
+		      else
+		        // Allow: search match Name or iccid
+		        
+		      end
+		      
+		    end
 		    
 		    // Add row
 		    var tarsRow() as String
