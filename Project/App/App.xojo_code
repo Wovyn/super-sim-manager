@@ -26,6 +26,11 @@ Inherits Application
 		    // Not setup yet
 		    winSettings.Show
 		    
+		  else
+		    // Show list
+		    winList.LoadSims
+		    winList.Show
+		    
 		  end
 		End Sub
 	#tag EndEvent

@@ -15,7 +15,7 @@ Begin Window winSettings
    MacProcID       =   0
    MaximumHeight   =   32000
    MaximumWidth    =   32000
-   MenuBar         =   786071551
+   MenuBar         =   0
    MenuBarVisible  =   True
    MinimumHeight   =   140
    MinimumWidth    =   500
