@@ -27,7 +27,7 @@ Begin Window winList
    Begin Twilio.Client oClient
       Index           =   -2147483648
       LockedInPosition=   False
-      Scope           =   1
+      Scope           =   2
       TabPanelIndex   =   0
    End
    Begin PushButton btnReload
@@ -52,7 +52,7 @@ Begin Window winList
       LockTop         =   False
       MacButtonStyle  =   0
       Scope           =   2
-      TabIndex        =   0
+      TabIndex        =   6
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
@@ -81,7 +81,7 @@ Begin Window winList
       MaximumRecentItems=   -1
       RecentItemsValue=   "Recent Searches"
       Scope           =   2
-      TabIndex        =   1
+      TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   ""
@@ -155,7 +155,7 @@ Begin Window winList
       LockRight       =   True
       LockTop         =   False
       Scope           =   2
-      TabIndex        =   3
+      TabIndex        =   5
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
@@ -185,7 +185,7 @@ Begin Window winList
       LockRight       =   False
       LockTop         =   True
       Scope           =   2
-      TabIndex        =   4
+      TabIndex        =   1
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
@@ -196,6 +196,70 @@ Begin Window winList
       VisualState     =   0
       Width           =   100
    End
+   Begin PushButton btnSetStatus
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Cancel          =   False
+      Caption         =   "Set SIM Status"
+      Default         =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   20
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   False
+      MacButtonStyle  =   0
+      Scope           =   2
+      TabIndex        =   3
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   380
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   120
+   End
+   Begin PushButton btnSetFleet
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Cancel          =   False
+      Caption         =   "Set Fleet"
+      Default         =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   152
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   False
+      MacButtonStyle  =   0
+      Scope           =   2
+      TabIndex        =   4
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   380
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   90
+   End
 End
 #tag EndWindow
 
@@ -204,6 +268,12 @@ End
 		Sub EnableMenuItems()
 		  // Can only export if we have data
 		  FileExport.Enabled = (lbSims.RowCount > 0)
+		End Sub
+	#tag EndEvent
+
+	#tag Event
+		Sub Open()
+		  SetEnabledState
 		End Sub
 	#tag EndEvent
 
@@ -430,7 +500,27 @@ End
 		  next toSim
 		  
 		  SyncCheckAllState
+		  SetEnabledState
 		  lbSims.Enabled = true
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub SetEnabledState()
+		  // Sets bulk action button states
+		  btnSetFleet.Enabled = false
+		  btnSetStatus.Enabled = false
+		  
+		  for ti as Integer = (lbSims.RowCount - 1) downto 0
+		    if lbSims.CellCheckBoxValueAt(ti, 0) = true then
+		      // Something is selected
+		      btnSetFleet.Enabled = true
+		      btnSetStatus.Enabled = true
+		      exit for ti
+		      
+		    end
+		    
+		  next ti
 		End Sub
 	#tag EndMethod
 
@@ -465,7 +555,6 @@ End
 		  end
 		  
 		  chkAll.Enabled = true
-		  
 		End Sub
 	#tag EndMethod
 
@@ -586,6 +675,8 @@ End
 		    SyncCheckAllState
 		    
 		  end
+		  
+		  SetEnabledState
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -603,6 +694,8 @@ End
 		  next ti
 		  
 		  lbSims.Enabled = true
+		  
+		  SetEnabledState
 		End Sub
 	#tag EndEvent
 #tag EndEvents
