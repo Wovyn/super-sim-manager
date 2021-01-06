@@ -2,7 +2,21 @@
 Protected Class Client
 	#tag Method, Flags = &h0
 		Sub ApplyAssociations()
-		  // Method iterates Sims and applies associated fleet data
+		  // Iterate Fleets and apply associated profile data
+		  for each toFleet as Twilio.Fleet in me.aroFleets
+		    // Find profile
+		    for each toProfile as Twilio.NetworkAccessProfile in me.aroProfiles
+		      if toProfile.sSID = toFleet.sNetworkAccessProfileID then
+		        toFleet.oNetworkAccessProfile = toProfile
+		        exit for toProfile
+		        
+		      end
+		      
+		    next toProfile
+		    
+		  next toFleet
+		  
+		  // Iterate Sims and apply associated fleet data
 		  for each toSim as Twilio.Sim in me.aroSims
 		    // Find fleet
 		    for each toFleet as Twilio.Fleet in me.aroFleets
@@ -26,17 +40,17 @@ Protected Class Client
 		  aroFleets.ResizeTo(-1)
 		  
 		  if tdictResponse.HasKey("fleets") then
-		    var tardictSims() as Object = tdictResponse.Value("fleets")
+		    var tardictFleets() as Object = tdictResponse.Value("fleets")
 		    
 		    // API 2.0 JSONItems are too ambigous for my taste.
-		    for each tdictSim as Object in tardictSims
-		      if tdictSim isa Dictionary then
-		        var toFleet as new Twilio.Fleet(Dictionary(tdictSim))
+		    for each tdictFleet as Object in tardictFleets
+		      if tdictFleet isa Dictionary then
+		        var toFleet as new Twilio.Fleet(Dictionary(tdictFleet))
 		        aroFleets.Add(toFleet)
 		        
 		      end
 		      
-		    next tdictSim
+		    next tdictFleet
 		    
 		  end
 		  
@@ -63,6 +77,19 @@ Protected Class Client
 		  
 		  // Request async
 		  toReq.Send("GET", "https://supersim.twilio.com/v1/Fleets")
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub ListProfiles()
+		  // Asynchronous event to fetch all Sim resources
+		  var toReq as NetRequest = NewRequest
+		  
+		  // Handle response
+		  AddHandler toReq.Completed, WeakAddressOf ProfilesResponse
+		  
+		  // Request async
+		  toReq.Send("GET", "https://supersim.twilio.com/v1/NetworkAccessProfiles")
 		End Sub
 	#tag EndMethod
 
@@ -98,6 +125,33 @@ Protected Class Client
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
+		Private Sub ProfilesResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
+		  #pragma unused toSender
+		  
+		  // Gather the Sim resources
+		  aroProfiles.ResizeTo(-1)
+		  
+		  if tdictResponse.HasKey("network_access_profiles") then
+		    var tardictProfiles() as Object = tdictResponse.Value("network_access_profiles")
+		    
+		    // API 2.0 JSONItems are too ambigous for my taste.
+		    for each tdictProfile as Object in tardictProfiles
+		      if tdictProfile isa Dictionary then
+		        var toProfile as new Twilio.NetworkAccessProfile(Dictionary(tdictProfile))
+		        aroProfiles.Add(toProfile)
+		        
+		      end
+		      
+		    next tdictProfile
+		    
+		  end
+		  
+		  // Make the list available
+		  RaiseEvent ProfileListComplete
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
 		Private Sub SimsResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
 		  #pragma unused toSender
 		  
@@ -130,6 +184,10 @@ Protected Class Client
 	#tag EndHook
 
 	#tag Hook, Flags = &h0
+		Event ProfileListComplete()
+	#tag EndHook
+
+	#tag Hook, Flags = &h0
 		Event ServerResponse(toErr as Twilio.RequestError)
 	#tag EndHook
 
@@ -140,6 +198,10 @@ Protected Class Client
 
 	#tag Property, Flags = &h0
 		aroFleets() As Twilio.Fleet
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		aroProfiles() As Twilio.NetworkAccessProfile
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

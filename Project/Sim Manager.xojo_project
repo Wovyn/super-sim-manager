@@ -9,6 +9,7 @@ Class=App;App/App.xojo_code;&h000000005E5A87FF;&h0000000053C67FFF;false
 MenuBar=mbMain;App/mbMain.xojo_menu;&h000000002EDA7FFF;&h0000000053C67FFF;false
 Window=winSettings;App/winSettings.xojo_window;&h0000000029BE5FFF;&h0000000053C67FFF;false
 Class=Sim;Twilio/Sim.xojo_code;&h00000000213FF7FF;&h000000003C08AFFF;false
+Class=NetworkAccessProfile;Twilio/NetworkAccessProfile.xojo_code;&h000000006D6ACFFF;&h000000003C08AFFF;false
 Class=Fleet;Twilio/Fleet.xojo_code;&h000000000543F7FF;&h000000003C08AFFF;false
 Window=winList;App/winList.xojo_window;&h00000000640A57FF;&h0000000053C67FFF;false
 Class=NetRequest;Twilio/NetRequest.xojo_code;&h0000000065B937FF;&h000000003C08AFFF;false

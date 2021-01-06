@@ -1,25 +1,25 @@
 #tag Class
-Protected Class Fleet
+Protected Class NetworkAccessProfile
 	#tag Method, Flags = &h0
 		Sub Constructor(tdictItem as Dictionary = nil)
+		  // Setup object
+		  dictLinks = new Dictionary
+		  
 		  if tdictItem <> nil then
-		    bCommandsEnabled = tdictItem.Lookup("commands_enabled", false)
-		    bDataEnabled = tdictItem.Lookup("data_enabled", false)
-		    
-		    iDataLimit = tdictItem.Lookup("data_limit", 1000)
-		    
 		    sAccountSID = tdictItem.Lookup("account_sid", "")
-		    sCommandsMethod = tdictItem.Lookup("commands_method", "")
-		    sCommandsURL = tdictItem.Lookup("commands_url", "")
-		    sDataMetering = tdictItem.Lookup("data_metering", "")
-		    sNetworkAccessProfileID = tdictItem.Lookup("network_access_profile_sid", "")
 		    sSID = tdictItem.Lookup("sid", "")
 		    sUniqueName = tdictItem.Lookup("unique_name", "")
 		    sURL = tdictItem.Lookup("url", "")
 		    
-		    // Cleanup commands url
-		    if sCommandsURL.Trim = "null" then
-		      sCommandsURL = ""
+		    // Links dictionary / key value pairs
+		    if tdictItem.HasKey("links") then
+		      try
+		        var taroLinks as Dictionary = tdictItem.Value("links")
+		        dictLinks = taroLinks
+		        
+		      catch ex as TypeMismatchException
+		        // API 2.0 JSONItems are too ambigous for my taste.
+		      end try
 		      
 		    end
 		    
@@ -47,25 +47,9 @@ Protected Class Fleet
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function FormattedDataLimit() As String
-		  if iDataLimit < 1000 then
-		    return iDataLimit.ToString + " MB"
-		    
-		  end
-		  
-		  var tdGB as Double = iDataLimit / 1000
-		  return Format(tdGB, "####.0#") + " GB"
-		End Function
-	#tag EndMethod
-
 
 	#tag Property, Flags = &h0
-		bCommandsEnabled As Boolean
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		bDataEnabled As Boolean
+		dictLinks As Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -77,31 +61,7 @@ Protected Class Fleet
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		iDataLimit As Integer
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		oNetworkAccessProfile As Twilio.NetworkAccessProfile
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
 		sAccountSID As String
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		sCommandsMethod As String
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		sCommandsURL As String
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		sDataMetering As String
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		sNetworkAccessProfileID As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -189,62 +149,6 @@ Protected Class Fleet
 			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="sNetworkAccessProfileID"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="String"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="sDataMetering"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="String"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="sCommandsURL"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="String"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="bDataEnabled"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="bCommandsEnabled"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="sCommandsMethod"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="String"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="iDataLimit"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Integer"
-			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

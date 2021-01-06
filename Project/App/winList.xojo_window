@@ -182,6 +182,7 @@ End
 		Private Sub HandleLoadResponse()
 		  // Wait for all the parts to load, then assemble the associations
 		  if not mbLoadedFleets then return
+		  if not mbLoadedProfiles then return
 		  if not mbLoadedSims then return
 		  
 		  // Parts are loaded, apply associations
@@ -209,6 +210,7 @@ End
 		  
 		  // Reset load flags
 		  mbLoadedFleets = false
+		  mbLoadedProfiles = false
 		  mbLoadedSims = false
 		  
 		  // Set client auth and reload sim list
@@ -216,6 +218,7 @@ End
 		  oClient.sToken = App.Settings.Lookup("TwilioAuthToken", "").StringValue
 		  
 		  oClient.ListFleets
+		  oClient.ListProfiles
 		  oClient.ListSims
 		End Sub
 	#tag EndMethod
@@ -252,13 +255,23 @@ End
 		      tarsRow.Add(toSim.oFleet.sUniqueName)
 		      tarsRow.Add(toSim.oFleet.FormattedDataLimit)
 		      
+		      // Network Access Profile
+		      if toSim.oFleet.oNetworkAccessProfile <> nil then
+		        tarsRow.Add(toSim.oFleet.oNetworkAccessProfile.sUniqueName)
+		        
+		      else
+		        tarsRow.Add("No Network Access Profile")
+		        
+		      end
+		      
 		    else
 		      tarsRow.Add("No Fleet")
 		      tarsRow.Add("0 MB")
+		      tarsRow.Add("")
 		      
 		    end
 		    
-		    // tarsRow.Add( NAP
+		    // Date created
 		    if toSim.dtmCreated <> nil then
 		      tarsRow.Add(toSim.dtmCreated.SQLDate)
 		      
@@ -267,6 +280,7 @@ End
 		      
 		    end
 		    
+		    // Add row and retain objects
 		    lbSims.AddRow(tarsRow)
 		    lbSims.RowTagAt(lbSims.LastAddedRowIndex) = toSim
 		    
@@ -279,6 +293,10 @@ End
 
 	#tag Property, Flags = &h21
 		Private mbLoadedFleets As Boolean
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mbLoadedProfiles As Boolean
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -329,17 +347,15 @@ End
 	#tag EndEvent
 	#tag Event
 		Sub FleetListComplete()
-		  // Sort the Fleets by name
-		  var tarsNames() as String
-		  for each toFleet as Twilio.Fleet in me.aroFleets
-		    tarsNames.Add(toFleet.sUniqueName)
-		    
-		  next toFleet
-		  
-		  tarsNames.SortWith(me.aroFleets)
-		  
 		  // Check if ready to merge data
 		  mbLoadedFleets = true
+		  HandleLoadResponse
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub ProfileListComplete()
+		  // Check if ready to merge data
+		  mbLoadedProfiles = true
 		  HandleLoadResponse
 		End Sub
 	#tag EndEvent
