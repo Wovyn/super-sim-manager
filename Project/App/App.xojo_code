@@ -28,7 +28,7 @@ Inherits Application
 		    
 		  else
 		    // Show list
-		    winList.LoadSims
+		    winList.LoadClient
 		    winList.Show
 		    
 		  end

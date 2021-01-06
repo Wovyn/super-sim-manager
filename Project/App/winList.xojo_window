@@ -23,7 +23,7 @@ Begin Window winList
    Title           =   "Twilio Super Sim Manager"
    Type            =   0
    Visible         =   False
-   Width           =   600
+   Width           =   800
    Begin Twilio.Client oClient
       Index           =   -2147483648
       LockedInPosition=   False
@@ -72,7 +72,7 @@ Begin Window winList
       Hint            =   ""
       Index           =   -2147483648
       InitialParent   =   ""
-      Left            =   304
+      Left            =   504
       LockBottom      =   False
       LockedInPosition=   False
       LockLeft        =   False
@@ -96,12 +96,12 @@ Begin Window winList
       AllowAutoHideScrollbars=   True
       AllowExpandableRows=   False
       AllowFocusRing  =   False
-      AllowResizableColumns=   False
+      AllowResizableColumns=   True
       AllowRowDragging=   False
       AllowRowReordering=   False
       Bold            =   False
-      ColumnCount     =   1
-      ColumnWidths    =   ""
+      ColumnCount     =   7
+      ColumnWidths    =   "*,*,60,*,80"
       DataField       =   ""
       DataSource      =   ""
       DefaultRowHeight=   22
@@ -120,7 +120,7 @@ Begin Window winList
       Height          =   322
       Index           =   -2147483648
       InitialParent   =   ""
-      InitialValue    =   "Unique Name"
+      InitialValue    =   "Name	iccid	Status	Fleet	Data Limit	NAP	Date Created\n"
       Italic          =   False
       Left            =   20
       LockBottom      =   True
@@ -139,7 +139,7 @@ Begin Window winList
       Transparent     =   False
       Underline       =   False
       Visible         =   True
-      Width           =   560
+      Width           =   760
       _ScrollWidth    =   -1
    End
    Begin ProgressWheel pwWait
@@ -178,8 +178,28 @@ End
 	#tag EndMenuHandler
 
 
+	#tag Method, Flags = &h21
+		Private Sub HandleLoadResponse()
+		  // Wait for all the parts to load, then assemble the associations
+		  if not mbLoadedFleets then return
+		  if not mbLoadedSims then return
+		  
+		  // Parts are loaded, apply associations
+		  oClient.ApplyAssociations
+		  
+		  // Reload list
+		  ReloadList
+		  
+		  // Re-enable UI
+		  btnReload.Enabled = true
+		  pwWait.Visible = false
+		  txtSearch.Enabled = true
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
-		Sub LoadSims()
+		Sub LoadClient()
 		  // Disable UI
 		  btnReload.Enabled = false
 		  lbSims.Enabled = false
@@ -187,12 +207,15 @@ End
 		  txtSearch.Enabled = false
 		  txtSearch.Text = ""
 		  
-		  maroSims.ResizeTo(-1)
+		  // Reset load flags
+		  mbLoadedFleets = false
+		  mbLoadedSims = false
 		  
 		  // Set client auth and reload sim list
 		  oClient.sSID   = App.Settings.Lookup("TwilioAuthSID", "").StringValue
 		  oClient.sToken = App.Settings.Lookup("TwilioAuthToken", "").StringValue
 		  
+		  oClient.ListFleets
 		  oClient.ListSims
 		End Sub
 	#tag EndMethod
@@ -205,19 +228,47 @@ End
 		  var tsSearch as String = txtSearch.Text.Trim
 		  
 		  // Load Listbox
-		  for each toSim as Twilio.Sim in maroSims
+		  for each toSim as Twilio.Sim in oClient.aroSims
 		    // Handle search
 		    if tsSearch <> "" and toSim.sUniqueName.IndexOf(tsSearch) < 0 then continue
 		    
 		    // Add row
-		    lbSims.AddRow(toSim.sUniqueName)
-		    lbSims.RowTagAt(lbSims.LastAddedRowIndex) = toSim
+		    var tarsRow() as String
 		    
-		    // Backup to iccid
-		    if toSim.sUniqueName.Trim = "" then
-		      lbSims.CellValueAt(lbSims.LastAddedRowIndex, 0) = toSim.sICCID
+		    // Name or iccid if empty
+		    if toSim.sUniqueName.Trim <> "" then
+		      tarsRow.Add(toSim.sUniqueName)
+		      
+		    else
+		      tarsRow.Add(toSim.sICCID)
 		      
 		    end
+		    
+		    tarsRow.Add(toSim.sICCID)
+		    tarsRow.Add(toSim.sStatus)
+		    
+		    // Fleet
+		    if toSim.oFleet <> nil then
+		      tarsRow.Add(toSim.oFleet.sUniqueName)
+		      tarsRow.Add(toSim.oFleet.FormattedDataLimit)
+		      
+		    else
+		      tarsRow.Add("No Fleet")
+		      tarsRow.Add("0 MB")
+		      
+		    end
+		    
+		    // tarsRow.Add( NAP
+		    if toSim.dtmCreated <> nil then
+		      tarsRow.Add(toSim.dtmCreated.SQLDate)
+		      
+		    else
+		      tarsRow.Add("Unknown")
+		      
+		    end
+		    
+		    lbSims.AddRow(tarsRow)
+		    lbSims.RowTagAt(lbSims.LastAddedRowIndex) = toSim
 		    
 		  next toSim
 		  
@@ -227,7 +278,11 @@ End
 
 
 	#tag Property, Flags = &h21
-		Private maroSims() As Twilio.Sim
+		Private mbLoadedFleets As Boolean
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mbLoadedSims As Boolean
 	#tag EndProperty
 
 
@@ -235,26 +290,19 @@ End
 
 #tag Events oClient
 	#tag Event
-		Sub SimListComplete(taroSims() as Twilio.Sim)
-		  // Re-enable UI
-		  btnReload.Enabled = true
-		  pwWait.Visible = false
-		  txtSearch.Enabled = true
-		  
+		Sub SimListComplete()
 		  // Sort the Sims by name
 		  var tarsNames() as String
-		  for each toSim as Twilio.Sim in taroSims
+		  for each toSim as Twilio.Sim in me.aroSims
 		    tarsNames.Add(toSim.sUniqueName)
 		    
 		  next toSim
 		  
-		  tarsNames.SortWith(taroSims)
+		  tarsNames.SortWith(me.aroSims)
 		  
-		  // Store Sims
-		  maroSims = taroSims
-		  
-		  // Reload list
-		  ReloadList
+		  // Check if ready to merge data
+		  mbLoadedSims = true
+		  HandleLoadResponse
 		End Sub
 	#tag EndEvent
 	#tag Event
@@ -279,12 +327,28 @@ End
 		  call tmd.ShowModalWithin(self)
 		End Sub
 	#tag EndEvent
+	#tag Event
+		Sub FleetListComplete()
+		  // Sort the Fleets by name
+		  var tarsNames() as String
+		  for each toFleet as Twilio.Fleet in me.aroFleets
+		    tarsNames.Add(toFleet.sUniqueName)
+		    
+		  next toFleet
+		  
+		  tarsNames.SortWith(me.aroFleets)
+		  
+		  // Check if ready to merge data
+		  mbLoadedFleets = true
+		  HandleLoadResponse
+		End Sub
+	#tag EndEvent
 #tag EndEvents
 #tag Events btnReload
 	#tag Event
 		Sub Action()
-		  // Reload Sims
-		  LoadSims
+		  // Reload Client
+		  LoadClient
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -296,6 +360,15 @@ End
 		    ReloadList
 		    
 		  end
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events lbSims
+	#tag Event
+		Sub Open()
+		  // Set alignment
+		  me.ColumnAlignmentAt(2) = Listbox.Alignments.Center
+		  me.ColumnAlignmentAt(4) = Listbox.Alignments.Center
 		End Sub
 	#tag EndEvent
 #tag EndEvents

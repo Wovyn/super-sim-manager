@@ -11,6 +11,26 @@ Protected Class Sim
 		    sUniqueName = tdictItem.Lookup("unique_name", "")
 		    sURL = tdictItem.Lookup("url", "")
 		    
+		    // Clean date created for Xojo
+		    if tdictItem.HasKey("date_created") then
+		      var tsDateCreated as String = tdictItem.Value("date_created")
+		      tsDateCreated = tsDateCreated.Replace("T", " ")
+		      tsDateCreated = tsDateCreated.Replace("Z", "")
+		      
+		      dtmCreated = DateTime.FromString(tsDateCreated)
+		      
+		    end
+		    
+		    // Clean date updated for Xojo
+		    if tdictItem.HasKey("date_updated") then
+		      var tsDateUpdated as String = tdictItem.Value("date_updated")
+		      tsDateUpdated = tsDateUpdated.Replace("T", " ")
+		      tsDateUpdated = tsDateUpdated.Replace("Z", "")
+		      
+		      dtmUpdated = DateTime.FromString(tsDateUpdated)
+		      
+		    end
+		    
 		  end
 		End Sub
 	#tag EndMethod
@@ -22,6 +42,10 @@ Protected Class Sim
 
 	#tag Property, Flags = &h0
 		dtmUpdated As DateTime
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		oFleet As Twilio.Fleet
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

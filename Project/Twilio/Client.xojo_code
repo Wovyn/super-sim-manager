@@ -1,28 +1,38 @@
 #tag Class
 Protected Class Client
-	#tag Method, Flags = &h21
-		Private Sub HandleServerResponse(toSender as NetRequest, toErr as RequestError)
-		  // Re-raise server responses
-		  #pragma unused toSender
-		  RaiseEvent ServerResponse(toErr)
+	#tag Method, Flags = &h0
+		Sub ApplyAssociations()
+		  // Method iterates Sims and applies associated fleet data
+		  for each toSim as Twilio.Sim in me.aroSims
+		    // Find fleet
+		    for each toFleet as Twilio.Fleet in me.aroFleets
+		      if toFleet.sSID = toSim.sFleetSID then
+		        toSim.oFleet = toFleet
+		        exit for toFleet
+		        
+		      end
+		      
+		    next toFleet
+		    
+		  next toSim
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub ListResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
+		Private Sub FleetsResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
 		  #pragma unused toSender
 		  
 		  // Gather the Sim resources
-		  var taroSims() as Twilio.Sim
+		  aroFleets.ResizeTo(-1)
 		  
-		  if tdictResponse.HasKey("sims") then
-		    var tardictSims() as Object = tdictResponse.Value("sims")
+		  if tdictResponse.HasKey("fleets") then
+		    var tardictSims() as Object = tdictResponse.Value("fleets")
 		    
 		    // API 2.0 JSONItems are too ambigous for my taste.
 		    for each tdictSim as Object in tardictSims
 		      if tdictSim isa Dictionary then
-		        var toSim as new Twilio.Sim(Dictionary(tdictSim))
-		        taroSims.Add(toSim)
+		        var toFleet as new Twilio.Fleet(Dictionary(tdictSim))
+		        aroFleets.Add(toFleet)
 		        
 		      end
 		      
@@ -31,7 +41,28 @@ Protected Class Client
 		  end
 		  
 		  // Make the list available
-		  RaiseEvent SimListComplete(taroSims)
+		  RaiseEvent FleetListComplete
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub HandleServerResponse(toSender as NetRequest, toErr as RequestError)
+		  // Re-raise server responses
+		  #pragma unused toSender
+		  RaiseEvent ServerResponse(toErr)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub ListFleets()
+		  // Asynchronous event to fetch all Fleet resources
+		  var toReq as NetRequest = NewRequest
+		  
+		  // Handle response
+		  AddHandler toReq.Completed, WeakAddressOf FleetsResponse
+		  
+		  // Request async
+		  toReq.Send("GET", "https://supersim.twilio.com/v1/Fleets")
 		End Sub
 	#tag EndMethod
 
@@ -41,10 +72,7 @@ Protected Class Client
 		  var toReq as NetRequest = NewRequest
 		  
 		  // Handle response
-		  AddHandler toReq.Completed, WeakAddressOf ListResponse
-		  
-		  // Retain the request
-		  maroRequests.Add(toReq)
+		  AddHandler toReq.Completed, WeakAddressOf SimsResponse
 		  
 		  // Request async
 		  toReq.Send("GET", "https://supersim.twilio.com/v1/Sims")
@@ -59,6 +87,9 @@ Protected Class Client
 		  var toSock as new NetRequest
 		  toSock.RequestHeader("Authorization") = "Basic " + tsAuth
 		  
+		  // Retain the request
+		  maroRequests.Add(toSock)
+		  
 		  // Handle server responses that aren't 200
 		  AddHandler toSock.ServerResponse, WeakAddressOf HandleServerResponse
 		  
@@ -66,15 +97,54 @@ Protected Class Client
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Sub SimsResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
+		  #pragma unused toSender
+		  
+		  // Gather the Sim resources
+		  aroSims.ResizeTo(-1)
+		  
+		  if tdictResponse.HasKey("sims") then
+		    var tardictSims() as Object = tdictResponse.Value("sims")
+		    
+		    // API 2.0 JSONItems are too ambigous for my taste.
+		    for each tdictSim as Object in tardictSims
+		      if tdictSim isa Dictionary then
+		        var toSim as new Twilio.Sim(Dictionary(tdictSim))
+		        aroSims.Add(toSim)
+		        
+		      end
+		      
+		    next tdictSim
+		    
+		  end
+		  
+		  // Make the list available
+		  RaiseEvent SimListComplete
+		End Sub
+	#tag EndMethod
+
+
+	#tag Hook, Flags = &h0
+		Event FleetListComplete()
+	#tag EndHook
 
 	#tag Hook, Flags = &h0
 		Event ServerResponse(toErr as Twilio.RequestError)
 	#tag EndHook
 
 	#tag Hook, Flags = &h0
-		Event SimListComplete(taroSims() as Twilio.Sim)
+		Event SimListComplete()
 	#tag EndHook
 
+
+	#tag Property, Flags = &h0
+		aroFleets() As Twilio.Fleet
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		aroSims() As Twilio.Sim
+	#tag EndProperty
 
 	#tag Property, Flags = &h21
 		Private maroRequests() As NetRequest

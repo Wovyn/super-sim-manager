@@ -16,6 +16,7 @@ Inherits URLConnection
 		      RaiseEvent Completed(tdictResponse)
 		      
 		    else
+		      // But it was an error message
 		      var toErr as new RequestError(tdictResponse)
 		      RaiseEvent ServerResponse(toErr)
 		      
@@ -24,12 +25,16 @@ Inherits URLConnection
 		  catch ex as InvalidJSONException
 		    
 		  end try
+		  
+		  // Bad response error
 		End Sub
 	#tag EndEvent
 
 	#tag Event
 		Sub Error(e As RuntimeException)
 		  break
+		  
+		  bDone = true
 		End Sub
 	#tag EndEvent
 
