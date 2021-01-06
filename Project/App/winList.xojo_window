@@ -699,6 +699,24 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
+#tag Events btnSetStatus
+	#tag Event
+		Sub Action()
+		  // Request the new status
+		  var toSelectNew as new winBulkSetStatus
+		  toSelectNew.ShowModalWithin(self)
+		  
+		  // User cancelled
+		  if toSelectNew.sNewStatus = "" then return
+		  
+		  var tmd as new MessageDialog
+		  tmd.Message = "Not Yet Implemented"
+		  tmd.Explanation = "This feature has not yet been implemented while we await API write permission."
+		  
+		  call tmd.ShowModalWithin(self)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag ViewBehavior
 	#tag ViewProperty
 		Name="Name"
