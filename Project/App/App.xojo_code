@@ -45,6 +45,48 @@ Inherits Application
 		End Function
 	#tag EndMenuHandler
 
+	#tag MenuHandler
+		Function HelpAbout() As Boolean Handles HelpAbout.Action
+			var tmd as new MessageDialog
+			tmd.Message = "About Super Sim Manager"
+			tmd.Explanation = "Version: " + App.ShortVersion
+			
+			call tmd.ShowModal
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+	#tag MenuHandler
+		Function HelpDevelopedBy() As Boolean Handles HelpDevelopedBy.Action
+			// Developed by Tim Parnell
+			ShowURL("https://xojoconsulting.com")
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+	#tag MenuHandler
+		Function HelpGithubProject() As Boolean Handles HelpGithubProject.Action
+			ShowURL("https://github.com/Wovyn/super-sim-manager")
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+	#tag MenuHandler
+		Function HelpSponsoredBy() As Boolean Handles HelpSponsoredBy.Action
+			// Sponsored by Wovyn, L.L.C.
+			ShowURL("https://wovyn.com/")
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
 
 	#tag Method, Flags = &h0
 		Function DataFolder() As FolderItem

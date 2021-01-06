@@ -155,5 +155,53 @@ Begin Menu mbMain
          Visible = True
       End
    End
+   Begin MenuItem HelpMenu
+      SpecialMenu = 0
+      Index = -2147483648
+      Text = "Help"
+      AutoEnabled = True
+      AutoEnable = True
+      Visible = True
+      Begin AppleMenuItem HelpAbout
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "About Super Sim Manager"
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
+      Begin ApplicationMenuItem PrefsSeparator
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "-"
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
+      Begin MenuItem HelpGithubProject
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "Github Project"
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
+      Begin MenuItem HelpSponsoredBy
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "Sponsored By: Wovyn, L.L.C."
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
+      Begin MenuItem HelpDevelopedBy
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "Developed By: Tim Parnell"
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
+   End
 End
 #tag EndMenu
