@@ -17,6 +17,7 @@ Class=NetRequest;Twilio/NetRequest.xojo_code;&h0000000065B937FF;&h000000003C08AF
 Class=Client;Twilio/Client.xojo_code;&h0000000004FE3FFF;&h000000003C08AFFF;false
 Class=RequestError;Twilio/RequestError.xojo_code;&h000000000727DFFF;&h000000003C08AFFF;false
 Window=winBulkSetStatus;App/winBulkSetStatus.xojo_window;&h000000006EB7BFFF;&h0000000053C67FFF;false
+Window=winBulkSetFleet;App/winBulkSetFleet.xojo_window;&h000000003059AFFF;&h0000000053C67FFF;false
 AppMenuBar=mbMain
 MajorVersion=1
 MinorVersion=0

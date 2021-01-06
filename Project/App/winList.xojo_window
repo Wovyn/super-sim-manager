@@ -624,6 +624,15 @@ End
 	#tag EndEvent
 	#tag Event
 		Sub FleetListComplete()
+		  // Sort the fleets by name for assignment list
+		  var tarsNames() as String
+		  for each toFleet as Twilio.Fleet in me.aroFleets
+		    tarsNames.Add(toFleet.sUniqueName)
+		    
+		  next toFleet
+		  
+		  tarsNames.SortWith(me.aroFleets)
+		  
 		  // Check if ready to merge data
 		  mbLoadedFleets = true
 		  HandleLoadResponse
@@ -708,6 +717,25 @@ End
 		  
 		  // User cancelled
 		  if toSelectNew.sNewStatus = "" then return
+		  
+		  var tmd as new MessageDialog
+		  tmd.Message = "Not Yet Implemented"
+		  tmd.Explanation = "This feature has not yet been implemented while we await API write permission."
+		  
+		  call tmd.ShowModalWithin(self)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events btnSetFleet
+	#tag Event
+		Sub Action()
+		  // Request the new status
+		  var toSelectNew as new winBulkSetFleet
+		  toSelectNew.LoadFleets(oClient)
+		  toSelectNew.ShowModalWithin(self)
+		  
+		  // User cancelled
+		  if toSelectNew.oSelectedFleet = nil then return
 		  
 		  var tmd as new MessageDialog
 		  tmd.Message = "Not Yet Implemented"
