@@ -44,19 +44,19 @@ Begin Window winList
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
-      Left            =   20
-      LockBottom      =   False
+      Left            =   924
+      LockBottom      =   True
       LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   False
       MacButtonStyle  =   0
       Scope           =   2
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   20
+      Top             =   380
       Transparent     =   False
       Underline       =   False
       Visible         =   True
@@ -72,7 +72,7 @@ Begin Window winList
       Hint            =   ""
       Index           =   -2147483648
       InitialParent   =   ""
-      Left            =   728
+      Left            =   720
       LockBottom      =   False
       LockedInPosition=   False
       LockLeft        =   False
@@ -89,7 +89,7 @@ Begin Window winList
       Top             =   20
       Transparent     =   False
       Visible         =   True
-      Width           =   276
+      Width           =   284
    End
    Begin Listbox lbSims
       AllowAutoDeactivate=   True
@@ -101,7 +101,7 @@ Begin Window winList
       AllowRowReordering=   False
       Bold            =   False
       ColumnCount     =   7
-      ColumnWidths    =   "*,*,60,*,80,110,90"
+      ColumnWidths    =   "*,*,60,0.8*,80,110,90"
       DataField       =   ""
       DataSource      =   ""
       DefaultRowHeight=   22
@@ -117,7 +117,7 @@ Begin Window winList
       HasHorizontalScrollbar=   False
       HasVerticalScrollbar=   True
       HeadingIndex    =   -1
-      Height          =   342
+      Height          =   314
       Index           =   -2147483648
       InitialParent   =   ""
       InitialValue    =   "Name	iccid	Status	Fleet	Data Limit	NAP	Date Created\n"
@@ -135,7 +135,7 @@ Begin Window winList
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   58
+      Top             =   54
       Transparent     =   False
       Underline       =   False
       Visible         =   True
@@ -148,21 +148,53 @@ Begin Window winList
       Height          =   16
       Index           =   -2147483648
       InitialParent   =   ""
-      Left            =   112
+      Left            =   896
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   False
+      Scope           =   2
+      TabIndex        =   3
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   383
+      Transparent     =   False
+      Visible         =   False
+      Width           =   16
+   End
+   Begin CheckBox chkAll
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Caption         =   " Select All"
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   23
       LockBottom      =   False
       LockedInPosition=   False
       LockLeft        =   True
       LockRight       =   False
       LockTop         =   True
       Scope           =   2
-      TabIndex        =   3
+      TabIndex        =   4
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   22
+      Top             =   28
       Transparent     =   False
-      Visible         =   False
-      Width           =   16
+      Underline       =   False
+      Visible         =   True
+      VisualState     =   0
+      Width           =   100
    End
 End
 #tag EndWindow
@@ -245,6 +277,7 @@ End
 		Sub LoadClient()
 		  // Disable UI
 		  btnReload.Enabled = false
+		  chkAll.Enabled = false
 		  lbSims.Enabled = false
 		  pwWait.Visible = true
 		  txtSearch.Enabled = false
@@ -268,6 +301,7 @@ End
 
 	#tag Method, Flags = &h21
 		Private Sub ReloadList()
+		  chkAll.Value = false
 		  lbSims.Enabled = false
 		  lbSims.RemoveAllRows
 		  
@@ -277,6 +311,7 @@ End
 		  lbSims.ColumnSortDirectionAt(0) = Listbox.SortDirections.Ascending
 		  lbSims.HasHeader = true
 		  
+		  // Cache search
 		  var tsSearch as String = txtSearch.Text.Trim
 		  
 		  // Load Listbox
@@ -376,6 +411,7 @@ End
 		    
 		  next toSim
 		  
+		  chkAll.Enabled = true
 		  lbSims.Enabled = true
 		End Sub
 	#tag EndMethod
@@ -484,6 +520,62 @@ End
 		  // Set alignment
 		  me.ColumnAlignmentAt(2) = Listbox.Alignments.Center
 		  me.ColumnAlignmentAt(4) = Listbox.Alignments.Center
+		  
+		  me.ColumnTypeAt(0) = Listbox.CellTypes.CheckBox
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub CellAction(row As Integer, column As Integer)
+		  if me.Enabled = false then return
+		  
+		  // Sync Check All state
+		  if column = 0 then
+		    var tbChecked, tbUnchecked as Boolean
+		    
+		    for ti as Integer = (me.RowCount - 1) downto 0
+		      if me.CellCheckBoxValueAt(ti, 0) = true then
+		        tbChecked = true
+		        
+		      else
+		        tbUnchecked = true
+		        
+		      end
+		      
+		    next ti
+		    
+		    chkAll.Enabled = false
+		    
+		    if tbChecked and not tbUnchecked then
+		      chkAll.VisualState = CheckBox.VisualStates.Checked
+		      
+		    elseif not tbChecked and tbUnchecked then
+		      chkAll.VisualState = CheckBox.VisualStates.Unchecked
+		      
+		    else
+		      chkAll.VisualState = CheckBox.VisualStates.Indeterminate
+		      
+		    end
+		    
+		    chkAll.Enabled = true
+		    
+		  end
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events chkAll
+	#tag Event
+		Sub Action()
+		  // Set Check All state
+		  if me.Enabled = false then return
+		  
+		  lbSims.Enabled = false
+		  
+		  for ti as Integer = (lbSims.RowCount - 1) downto 0
+		    lbSims.CellCheckBoxValueAt(ti, 0) = me.Value
+		    
+		  next ti
+		  
+		  lbSims.Enabled = true
 		End Sub
 	#tag EndEvent
 #tag EndEvents
