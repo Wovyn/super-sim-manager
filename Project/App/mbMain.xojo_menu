@@ -7,6 +7,26 @@ Begin Menu mbMain
       AutoEnabled = True
       AutoEnable = True
       Visible = True
+      Begin MenuItem FileExport
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "Export as CSV..."
+         ShortcutKey = "E"
+         Shortcut = "Cmd+Shift+E"
+         MenuModifier = True
+         AltMenuModifier = True
+         AutoEnabled = False
+         AutoEnable = False
+         Visible = True
+      End
+      Begin MenuItem UntitledSeparator0
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "-"
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
       Begin MenuItem FileClose
          SpecialMenu = 0
          Index = -2147483648

@@ -168,11 +168,53 @@ End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Event
+		Sub EnableMenuItems()
+		  // Can only export if we have data
+		  FileExport.Enabled = (lbSims.RowCount > 0)
+		End Sub
+	#tag EndEvent
+
+
 	#tag MenuHandler
 		Function FileClose() As Boolean Handles FileClose.Action
 			self.Close
 			
 			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+	#tag MenuHandler
+		Function FileExport() As Boolean Handles FileExport.Action
+			// Get TSV from hidden Xojo feature
+			var tsTSV as String = lbSims.CellValueAt(-1, -1)
+			var tsCSV as String = tsTSV.ReplaceAll(Encodings.UTF8.Chr(9), ",")
+			
+			var tfCSV as new FileType
+			tfCSV.Name = "CSV"
+			tfCSV.Extensions = ".csv"
+			
+			var tmd as new SaveFileDialog
+			tmd.Filter = tfCSV
+			tmd.SuggestedFileName = "Sim Export.csv"
+			
+			var tfDest as FolderItem = tmd.ShowModal
+			
+			// User cancelled
+			if tfDest = nil then return true
+			
+			try
+			var tos as TextOutputStream = TextOutputStream.Create(tfDest)
+			tos.Write(tsCSV)
+			tos.Close
+			
+			catch ex as IOException
+			MessageBox("Export Error" + EndOfLine + EndOfLine + ex.Message)
+			
+			end try
+			
+			return true
 			
 		End Function
 	#tag EndMenuHandler
@@ -239,7 +281,7 @@ End
 		  
 		  // Load Listbox
 		  for each toSim as Twilio.Sim in oClient.aroSims
-		    // Handle search
+		    // Handle search entirely in Xojo code, is fast, is fine.
 		    if tsSearch <> "" then
 		      if  (toSim.sUniqueName.IndexOf(tsSearch) < 0) and _
 		        (toSim.sICCID.IndexOf(tsSearch) < 0) then
