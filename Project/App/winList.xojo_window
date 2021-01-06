@@ -347,11 +347,14 @@ End
 		Sub LoadClient()
 		  // Disable UI
 		  btnReload.Enabled = false
-		  chkAll.Enabled = false
 		  lbSims.Enabled = false
 		  pwWait.Visible = true
 		  txtSearch.Enabled = false
 		  txtSearch.Text = ""
+		  
+		  // Clear existing selection
+		  chkAll.Value = false
+		  chkAll.Enabled = false
 		  
 		  // Reset load flags
 		  mbAuthenticationFailed = false
