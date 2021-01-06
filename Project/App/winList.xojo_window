@@ -301,8 +301,20 @@ End
 
 	#tag Method, Flags = &h21
 		Private Sub ReloadList()
-		  chkAll.Value = false
 		  lbSims.Enabled = false
+		  
+		  // Retain selections
+		  var tarsSelectedSids() as String
+		  for ti as Integer = (lbSims.RowCount - 1) downto 0
+		    if lbSims.CellCheckBoxValueAt(ti, 0) = true then
+		      var toTag as Twilio.Sim = lbSims.RowTagAt(ti)
+		      tarsSelectedSids.Add(toTag.sSID)
+		      
+		    end
+		    
+		  next ti
+		  
+		  // Clear
 		  lbSims.RemoveAllRows
 		  
 		  // Correct sort indicator
@@ -409,10 +421,51 @@ End
 		    lbSims.AddRow(tarsRow)
 		    lbSims.RowTagAt(lbSims.LastAddedRowIndex) = toSim
 		    
+		    // Restore selection
+		    if tarsSelectedSids.IndexOf(toSim.sSID) > -1 then
+		      lbSims.CellCheckBoxValueAt(lbSims.LastAddedRowIndex, 0) = true
+		      
+		    end
+		    
 		  next toSim
 		  
-		  chkAll.Enabled = true
+		  SyncCheckAllState
 		  lbSims.Enabled = true
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub SyncCheckAllState()
+		  // Syncs the chkAll state to the Listbox selection
+		  var tbChecked, tbUnchecked as Boolean
+		  
+		  // Determine state (Checked, Unchecked, or Indeterminate (both))
+		  for ti as Integer = (lbSims.RowCount - 1) downto 0
+		    if lbSims.CellCheckBoxValueAt(ti, 0) = true then
+		      tbChecked = true
+		      
+		    else
+		      tbUnchecked = true
+		      
+		    end
+		    
+		  next ti
+		  
+		  chkAll.Enabled = false
+		  
+		  if tbChecked and not tbUnchecked then
+		    chkAll.VisualState = CheckBox.VisualStates.Checked
+		    
+		  elseif not tbChecked and tbUnchecked then
+		    chkAll.VisualState = CheckBox.VisualStates.Unchecked
+		    
+		  else
+		    chkAll.VisualState = CheckBox.VisualStates.Indeterminate
+		    
+		  end
+		  
+		  chkAll.Enabled = true
+		  
 		End Sub
 	#tag EndMethod
 
@@ -530,33 +583,7 @@ End
 		  
 		  // Sync Check All state
 		  if column = 0 then
-		    var tbChecked, tbUnchecked as Boolean
-		    
-		    for ti as Integer = (me.RowCount - 1) downto 0
-		      if me.CellCheckBoxValueAt(ti, 0) = true then
-		        tbChecked = true
-		        
-		      else
-		        tbUnchecked = true
-		        
-		      end
-		      
-		    next ti
-		    
-		    chkAll.Enabled = false
-		    
-		    if tbChecked and not tbUnchecked then
-		      chkAll.VisualState = CheckBox.VisualStates.Checked
-		      
-		    elseif not tbChecked and tbUnchecked then
-		      chkAll.VisualState = CheckBox.VisualStates.Unchecked
-		      
-		    else
-		      chkAll.VisualState = CheckBox.VisualStates.Indeterminate
-		      
-		    end
-		    
-		    chkAll.Enabled = true
+		    SyncCheckAllState
 		    
 		  end
 		End Sub
