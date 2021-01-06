@@ -33,6 +33,21 @@ Protected Class Client
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
+		Private Sub CleanupRequests()
+		  // Iterate backwards as to not disturb the array
+		  for ti as Integer = maroRequests.LastRowIndex downto 0
+		    if maroRequests(ti).bDone then
+		      // Request is complete, destroy
+		      maroRequests(ti) = nil
+		      maroRequests.Remove(ti)
+		      
+		    end
+		    
+		  next ti
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
 		Private Sub FleetsResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
 		  #pragma unused toSender
 		  
@@ -56,14 +71,28 @@ Protected Class Client
 		  
 		  // Make the list available
 		  RaiseEvent FleetListComplete
+		  
+		  // Cleanup sockets
+		  SocketComplete(toSender)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub HandleError(toSender as Twilio.NetRequest, ex as RuntimeException)
+		  RaiseEvent RequestError(ex)
+		  
+		  // Cleanup sockets
+		  SocketComplete(toSender)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
 		Private Sub HandleServerResponse(toSender as NetRequest, toErr as RequestError)
 		  // Re-raise server responses
-		  #pragma unused toSender
 		  RaiseEvent ServerResponse(toErr)
+		  
+		  // Cleanup sockets
+		  SocketComplete(toSender)
 		End Sub
 	#tag EndMethod
 
@@ -148,6 +177,9 @@ Protected Class Client
 		  
 		  // Make the list available
 		  RaiseEvent ProfileListComplete
+		  
+		  // Cleanup sockets
+		  SocketComplete(toSender)
 		End Sub
 	#tag EndMethod
 
@@ -175,6 +207,20 @@ Protected Class Client
 		  
 		  // Make the list available
 		  RaiseEvent SimListComplete
+		  
+		  // Cleanup sockets
+		  SocketComplete(toSender)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub SocketComplete(toSocket as Twilio.NetRequest)
+		  // Cleanup sockets
+		  toSocket.bDone = true
+		  
+		  // Call on the next event loop
+		  // This could lead to mysterious NilObjectExceptions
+		  Timer.CallLater(10, WeakAddressOf CleanupRequests)
 		End Sub
 	#tag EndMethod
 
@@ -185,6 +231,10 @@ Protected Class Client
 
 	#tag Hook, Flags = &h0
 		Event ProfileListComplete()
+	#tag EndHook
+
+	#tag Hook, Flags = &h0
+		Event RequestError(ex as RuntimeException)
 	#tag EndHook
 
 	#tag Hook, Flags = &h0

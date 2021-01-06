@@ -23,24 +23,32 @@ Inherits URLConnection
 		    end
 		    
 		  catch ex as InvalidJSONException
+		    RaiseEvent Error(ex)
+		    return
 		    
 		  end try
 		  
 		  // Bad response error
+		  var ex as new Twilio.RequestError
+		  ex.Message = "Socket response was bad."
+		  
+		  RaiseEvent Error(ex)
 		End Sub
 	#tag EndEvent
 
 	#tag Event
 		Sub Error(e As RuntimeException)
-		  break
-		  
-		  bDone = true
+		  RaiseEvent Error(e)
 		End Sub
 	#tag EndEvent
 
 
 	#tag Hook, Flags = &h0
 		Event Completed(tdictResponse as Dictionary)
+	#tag EndHook
+
+	#tag Hook, Flags = &h0
+		Event Error(ex as RuntimeException)
 	#tag EndHook
 
 	#tag Hook, Flags = &h0
