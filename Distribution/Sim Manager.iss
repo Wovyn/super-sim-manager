@@ -3,16 +3,16 @@
 
 #define MyAppName "Twilio Sim Manager"
 #define MyAppExeName "Twilio Super Sim Manager.exe"
-#define MyAppVersion "27"
+#define MyAppVersion "1.0"
 #define MyAppPublisher "Wovyn"
-#define MyCopyrightString "© Wovyn, 2021"
+#define MyCopyrightString "© 2021, Wovyn L.L.C."
 #define MyAppURL "https://github.com/Wovyn/super-sim-manager"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{1A4AE9C2-8675-309A-6105-D2AC49E86612}
+AppId={{2AD8EBC1-7B45-4740-9184-ACAABD617CC2}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -25,11 +25,9 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 DisableProgramGroupPage=yes
 OutputDir=..\Distribution
-OutputBaseFilename={#MyAppName}Setup_{#MyAppVersion}
+OutputBaseFilename=SuperSimSetup_{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
-SignedUninstaller=True
-SignedUninstallerDir=..\Distribution
 AppCopyright={#MyCopyrightString}
 ShowLanguageDialog=no
 UninstallDisplayName={#MyAppName}
@@ -45,10 +43,11 @@ VersionInfoProductTextVersion={#MyAppVersion}
 ; done in "64-bit mode" on x64, meaning it should use the native
 ; 64-bit Program Files directory and the 64-bit view of the registry.
 ; On all other architectures it will install in "32-bit mode".
-ArchitecturesAllowed=x86 x64
+ArchitecturesAllowed=x64
 
 ; Settings
 WizardStyle=modern
+ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -59,7 +58,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 Source: "..\Project\Builds - Sim Manager\Windows 64 bit\Twilio Super Sim Manager\*"; DestDir: "{app}"; Flags: ignoreversion signonce
-Source: "..\Project\Builds - Sim Manager\Windows 64 bit\Twilio Super Sim Manager\Twilio Super Sim Manager Resources\*"; DestDir: "{app}\Twilio Super Sim Manager Resources"; Flags: ignoreversion recursesubdirs createallsubdirs
+; Source: "..\Project\Builds - Sim Manager\Windows 64 bit\Twilio Super Sim Manager\Twilio Super Sim Manager Resources\*"; DestDir: "{app}\Twilio Super Sim Manager Resources"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\Project\Builds - Sim Manager\Windows 64 bit\Twilio Super Sim Manager\Twilio Super Sim Manager Libs\*"; DestDir: "{app}\Twilio Super Sim Manager Libs"; Flags: ignoreversion recursesubdirs createallsubdirs signonce
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
