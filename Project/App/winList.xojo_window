@@ -10,15 +10,15 @@ Begin Window winList
    HasFullScreenButton=   False
    HasMaximizeButton=   True
    HasMinimizeButton=   True
-   Height          =   400
+   Height          =   420
    ImplicitInstance=   True
    MacProcID       =   0
    MaximumHeight   =   32000
    MaximumWidth    =   32000
    MenuBar         =   786071551
    MenuBarVisible  =   True
-   MinimumHeight   =   64
-   MinimumWidth    =   64
+   MinimumHeight   =   240
+   MinimumWidth    =   800
    Resizeable      =   True
    Title           =   "Twilio Super Sim Manager"
    Type            =   0
@@ -101,7 +101,7 @@ Begin Window winList
       AllowRowReordering=   False
       Bold            =   False
       ColumnCount     =   7
-      ColumnWidths    =   "*,*,60,*,80"
+      ColumnWidths    =   "*,*,60,*,80,110,90"
       DataField       =   ""
       DataSource      =   ""
       DefaultRowHeight=   22
@@ -117,7 +117,7 @@ Begin Window winList
       HasHorizontalScrollbar=   False
       HasVerticalScrollbar=   True
       HeadingIndex    =   -1
-      Height          =   322
+      Height          =   342
       Index           =   -2147483648
       InitialParent   =   ""
       InitialValue    =   "Name	iccid	Status	Fleet	Data Limit	NAP	Date Created\n"
@@ -209,6 +209,7 @@ End
 		  txtSearch.Text = ""
 		  
 		  // Reset load flags
+		  mbAuthenticationFailed = false
 		  mbLoadedFleets = false
 		  mbLoadedProfiles = false
 		  mbLoadedSims = false
@@ -227,6 +228,12 @@ End
 		Private Sub ReloadList()
 		  lbSims.Enabled = false
 		  lbSims.RemoveAllRows
+		  
+		  // Correct sort indicator
+		  lbSims.HasHeader = false
+		  lbSims.SortingColumn = 0
+		  lbSims.ColumnSortDirectionAt(0) = Listbox.SortDirections.Ascending
+		  lbSims.HasHeader = true
 		  
 		  var tsSearch as String = txtSearch.Text.Trim
 		  
@@ -292,6 +299,10 @@ End
 
 
 	#tag Property, Flags = &h21
+		Private mbAuthenticationFailed As Boolean
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
 		Private mbLoadedFleets As Boolean
 	#tag EndProperty
 
@@ -325,6 +336,9 @@ End
 	#tag EndEvent
 	#tag Event
 		Sub ServerResponse(toErr as Twilio.RequestError)
+		  // Prevent multiple notifications
+		  if mbAuthenticationFailed = true then return
+		  
 		  // Re-enable UI
 		  btnReload.Enabled = true
 		  pwWait.Visible = false
@@ -335,6 +349,8 @@ End
 		  if toErr.ErrorNumber = 20003 then
 		    tmd.Message = "Authentication Failed"
 		    tmd.Explanation = toErr.Message
+		    
+		    mbAuthenticationFailed = true
 		    
 		  else
 		    tmd.Message = "Server Response Failure"
