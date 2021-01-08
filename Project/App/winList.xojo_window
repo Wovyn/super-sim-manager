@@ -20,7 +20,7 @@ Begin Window winList
    MinimumHeight   =   240
    MinimumWidth    =   800
    Resizeable      =   True
-   Title           =   "Twilio Super Sim Manager"
+   Title           =   "Super Sim Manager"
    Type            =   0
    Visible         =   False
    Width           =   1024
