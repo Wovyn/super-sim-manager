@@ -14,11 +14,13 @@ Inherits URLConnection
 		    // Server responded
 		    if HTTPStatus = 200 then
 		      RaiseEvent Completed(tdictResponse)
+		      return
 		      
 		    else
 		      // But it was an error message
 		      var toErr as new RequestError(tdictResponse)
 		      RaiseEvent ServerResponse(toErr)
+		      return
 		      
 		    end
 		    
@@ -120,6 +122,14 @@ Inherits URLConnection
 			Group="Behavior"
 			InitialValue=""
 			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="bDone"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
