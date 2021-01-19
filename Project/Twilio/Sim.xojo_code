@@ -55,6 +55,9 @@ Protected Class Sim
 		    end select
 		    
 		  end
+		  
+		  // Store original values for comparing to update
+		  mdictOriginal = tdictItem
 		End Sub
 	#tag EndMethod
 
@@ -69,6 +72,10 @@ Protected Class Sim
 
 	#tag Property, Flags = &h0
 		eStatus As Twilio.Sim.Status
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mdictOriginal As Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -188,8 +195,16 @@ Protected Class Sim
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="String"
-			EditorType="MultiLineEditor"
+			Type="Twilio.Sim.Status"
+			EditorType="Enum"
+			#tag EnumValues
+				"0 - Unknown"
+				"1 - NewState"
+				"2 - Ready"
+				"3 - Active"
+				"4 - Inactive"
+				"5 - Scheduled"
+			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="sUniqueName"
