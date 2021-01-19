@@ -28,6 +28,8 @@ Begin Window winList
       Index           =   -2147483648
       LockedInPosition=   False
       Scope           =   2
+      sSID            =   ""
+      sToken          =   ""
       TabPanelIndex   =   0
    End
    Begin PushButton btnReload
@@ -44,7 +46,7 @@ Begin Window winList
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
-      Left            =   924
+      Left            =   914
       LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   False
@@ -60,7 +62,7 @@ Begin Window winList
       Transparent     =   False
       Underline       =   False
       Visible         =   True
-      Width           =   80
+      Width           =   90
    End
    Begin SearchField txtSearch
       AllowAutoDeactivate=   True
@@ -140,15 +142,16 @@ Begin Window winList
       Underline       =   False
       Visible         =   True
       Width           =   984
+      _ScrollOffset   =   0
       _ScrollWidth    =   -1
    End
    Begin ProgressWheel pwWait
       AllowAutoDeactivate=   True
       Enabled         =   True
-      Height          =   16
+      Height          =   17
       Index           =   -2147483648
       InitialParent   =   ""
-      Left            =   896
+      Left            =   886
       LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   False
@@ -192,15 +195,16 @@ Begin Window winList
       Top             =   28
       Transparent     =   False
       Underline       =   False
+      Value           =   False
       Visible         =   True
       VisualState     =   0
       Width           =   100
    End
-   Begin PushButton btnSetStatus
+   Begin PushButton btnEdit
       AllowAutoDeactivate=   True
       Bold            =   False
       Cancel          =   False
-      Caption         =   "Set SIM Status"
+      Caption         =   "#kEditSims"
       Default         =   False
       Enabled         =   True
       FontName        =   "System"
@@ -226,14 +230,13 @@ Begin Window winList
       Transparent     =   False
       Underline       =   False
       Visible         =   True
-      Width           =   120
+      Width           =   100
    End
-   Begin PushButton btnSetFleet
+   Begin Label lblSelected
       AllowAutoDeactivate=   True
       Bold            =   False
-      Cancel          =   False
-      Caption         =   "Set Fleet"
-      Default         =   False
+      DataField       =   ""
+      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   0.0
@@ -242,23 +245,27 @@ Begin Window winList
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
-      Left            =   152
-      LockBottom      =   True
+      Left            =   254
+      LockBottom      =   False
       LockedInPosition=   False
       LockLeft        =   True
       LockRight       =   False
-      LockTop         =   False
-      MacButtonStyle  =   0
+      LockTop         =   True
+      Multiline       =   False
       Scope           =   2
+      Selectable      =   False
       TabIndex        =   4
       TabPanelIndex   =   0
       TabStop         =   True
+      Text            =   "Selection"
+      TextAlignment   =   2
+      TextColor       =   &c00000000
       Tooltip         =   ""
       Top             =   380
       Transparent     =   False
       Underline       =   False
       Visible         =   True
-      Width           =   90
+      Width           =   516
    End
 End
 #tag EndWindow
@@ -511,19 +518,33 @@ End
 	#tag Method, Flags = &h21
 		Private Sub SetEnabledState()
 		  // Sets bulk action button states
-		  btnSetFleet.Enabled = false
-		  btnSetStatus.Enabled = false
+		  btnEdit.Enabled = false
+		  
+		  var tiSelectedCount as Integer
 		  
 		  for ti as Integer = (lbSims.RowCount - 1) downto 0
 		    if lbSims.CellCheckBoxValueAt(ti, 0) = true then
 		      // Something is selected
-		      btnSetFleet.Enabled = true
-		      btnSetStatus.Enabled = true
-		      exit for ti
+		      btnEdit.Enabled = true
+		      
+		      // Count selection
+		      tiSelectedCount = tiSelectedCount + 1
 		      
 		    end
 		    
 		  next ti
+		  
+		  // Set plural state
+		  btnEdit.Caption = if(tiSelectedCount = 1, kEditSim, kEditSims)
+		  
+		  // Set selection count
+		  if tiSelectedCount < 1 then
+		    lblSelected.Text = "No Selection"
+		    
+		  else
+		    lblSelected.Text = tiSelectedCount.ToString + " / " + lbSims.RowCount.ToString + " Selected"
+		    
+		  end
 		End Sub
 	#tag EndMethod
 
@@ -578,6 +599,12 @@ End
 		Private mbLoadedSims As Boolean
 	#tag EndProperty
 
+
+	#tag Constant, Name = kEditSim, Type = String, Dynamic = False, Default = \"Edit Sim", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = kEditSims, Type = String, Dynamic = False, Default = \"Edit Sims", Scope = Private
+	#tag EndConstant
 
 	#tag Constant, Name = kMonospacedFont, Type = String, Dynamic = False, Default = \"Courier New", Scope = Private
 		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"Menlo"
@@ -728,7 +755,7 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events btnSetStatus
+#tag Events btnEdit
 	#tag Event
 		Sub Action()
 		  // Request the new status
@@ -737,25 +764,6 @@ End
 		  
 		  // User cancelled
 		  if toSelectNew.sNewStatus = "" then return
-		  
-		  var tmd as new MessageDialog
-		  tmd.Message = "Not Yet Implemented"
-		  tmd.Explanation = "This feature has not yet been implemented while we await API write permission."
-		  
-		  call tmd.ShowModalWithin(self)
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events btnSetFleet
-	#tag Event
-		Sub Action()
-		  // Request the new status
-		  var toSelectNew as new winBulkSetFleet
-		  toSelectNew.LoadFleets(oClient)
-		  toSelectNew.ShowModalWithin(self)
-		  
-		  // User cancelled
-		  if toSelectNew.oSelectedFleet = nil then return
 		  
 		  var tmd as new MessageDialog
 		  tmd.Message = "Not Yet Implemented"
