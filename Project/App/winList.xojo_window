@@ -360,13 +360,15 @@ End
 		      // Checked
 		      taroSims.Add(lbSims.RowTagAt(ti))
 		      
-		    elseif lbSims.Selected(ti) then
-		      // Row selected (via click)
-		      taroSims.Add(lbSims.RowTagAt(ti))
-		      
 		    end
 		    
 		  next ti
+		  
+		  // If no checkboxes, fall back to selected row for individual edits
+		  if taroSims.LastIndex < 0 and lbSims.SelectedRowCount = 1 then
+		    taroSims.Add(lbSims.RowTagAt(lbSims.SelectedRowIndex))
+		    
+		  end
 		  
 		  return taroSims
 		End Function
