@@ -161,6 +161,8 @@ End
 		    var toUpdateSim as Twilio.Sim = aroUpdateSims(0)
 		    aroUpdateSims.RemoveAt(0)
 		    
+		    lblStatus.Text = "Updating " + toUpdateSim.sUniqueName + "..."
+		    
 		    oClient.UpdateSim(toUpdateSim)
 		    
 		  else
