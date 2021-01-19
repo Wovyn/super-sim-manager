@@ -523,11 +523,13 @@ End
 		  var tiSelectedCount as Integer
 		  
 		  for ti as Integer = (lbSims.RowCount - 1) downto 0
+		    // Count selection
 		    if lbSims.CellCheckBoxValueAt(ti, 0) = true then
-		      // Something is selected
-		      btnEdit.Enabled = true
+		      // Checked
+		      tiSelectedCount = tiSelectedCount + 1
 		      
-		      // Count selection
+		    elseif lbSims.Selected(ti) then
+		      // Row selected (via click)
 		      tiSelectedCount = tiSelectedCount + 1
 		      
 		    end
@@ -537,11 +539,13 @@ End
 		  // Set plural state
 		  btnEdit.Caption = if(tiSelectedCount = 1, kEditSim, kEditSims)
 		  
-		  // Set selection count
+		  // Set states based on selection
 		  if tiSelectedCount < 1 then
+		    btnEdit.Enabled = true
 		    lblSelected.Text = "No Selection"
 		    
 		  else
+		    btnEdit.Enabled = true
 		    lblSelected.Text = tiSelectedCount.ToString + " / " + lbSims.RowCount.ToString + " Selected"
 		    
 		  end
@@ -741,6 +745,13 @@ End
 		    
 		  end
 		End Function
+	#tag EndEvent
+	#tag Event
+		Sub Change()
+		  if me.Enabled = false then return
+		  
+		  SetEnabledState
+		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag Events chkAll
