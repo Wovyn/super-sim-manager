@@ -49,7 +49,7 @@ Begin Window winUpdate
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
-      Text            =   "Status"
+      Text            =   "Starting..."
       TextAlignment   =   0
       TextColor       =   &c00000000
       Tooltip         =   ""
@@ -72,14 +72,14 @@ Begin Window winUpdate
       LockLeft        =   True
       LockRight       =   False
       LockTop         =   True
-      MaximumValue    =   100
+      MaximumValue    =   2
       Scope           =   2
       TabIndex        =   1
       TabPanelIndex   =   0
       Tooltip         =   ""
       Top             =   42
       Transparent     =   False
-      Value           =   50.0
+      Value           =   1.0
       Visible         =   True
       Width           =   380
    End
@@ -115,12 +115,78 @@ Begin Window winUpdate
       Visible         =   True
       Width           =   80
    End
+   Begin Twilio.Client oClient
+      Index           =   -2147483648
+      LockedInPosition=   False
+      Scope           =   1
+      sSID            =   ""
+      sToken          =   ""
+      TabPanelIndex   =   0
+   End
+   Begin Timer tmrRelay
+      Enabled         =   True
+      Index           =   -2147483648
+      LockedInPosition=   False
+      Period          =   150
+      RunMode         =   1
+      Scope           =   2
+      TabPanelIndex   =   0
+   End
 End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Method, Flags = &h21
+		Private Sub HandleQueue()
+		  // Check user abort
+		  if mbStop then
+		    // Reload main window
+		    winList.LoadClient
+		    self.Close
+		    return
+		    
+		  end
+		  
+		  // Set progress
+		  if pbStatus.Indeterminate then
+		    pbStatus.Indeterminate = false
+		    pbStatus.MaximumValue = aroUpdateSims.Count
+		    
+		  end
+		  
+		  pbStatus.Value = pbStatus.MaximumValue - aroUpdateSims.LastIndex
+		  
+		  if aroUpdateSims.LastIndex > -1 then
+		    // Grab and update the next Sim
+		    var toUpdateSim as Twilio.Sim = aroUpdateSims(0)
+		    aroUpdateSims.RemoveAt(0)
+		    
+		    oClient.UpdateSim(toUpdateSim)
+		    
+		  else
+		    // Queue complete!
+		    var tmd as new MessageDialog
+		    tmd.Message = "Updates Complete"
+		    tmd.Explanation = "Successfully updated the selected SIMs."
+		    
+		    call tmd.ShowModal
+		    
+		    // Reload main window
+		    winList.LoadClient
+		    
+		    self.Close
+		    
+		  end
+		End Sub
+	#tag EndMethod
+
+
 	#tag Property, Flags = &h0
 		aroUpdateSims() As Twilio.Sim
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mbStop As Boolean
 	#tag EndProperty
 
 
@@ -129,7 +195,38 @@ End
 #tag Events btnStop
 	#tag Event
 		Sub Action()
+		  mbStop = true
+		  me.Enabled = false
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events oClient
+	#tag Event
+		Sub RequestError(ex as RuntimeException)
+		  // Eep
+		  var tmd as new MessageDialog
+		  tmd.Message = "Server Response Failure"
+		  tmd.Explanation = ex.Message
+		  
+		  call tmd.ShowModal
+		  
+		  // Stop and close
 		  self.Close
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub SimUpdateSuccess(toSim as Twilio.Sim)
+		  #pragma unused toSim
+		  
+		  HandleQueue
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events tmrRelay
+	#tag Event
+		Sub Action()
+		  // Timer to relay start of processing due to ShowModal
+		  HandleQueue
 		End Sub
 	#tag EndEvent
 #tag EndEvents

@@ -347,6 +347,10 @@ End
 		    var toUpdate as new winUpdate
 		    toUpdate.aroUpdateSims = toEdit.aroUpdates
 		    
+		    // Set credentials
+		    toUpdate.oClient.sSID   = me.oClient.sSID
+		    toUpdate.oClient.sToken = me.oClient.sToken
+		    
 		    // Not modal to allow async responses
 		    toUpdate.ShowWithin(self)
 		    

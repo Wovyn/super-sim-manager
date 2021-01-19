@@ -31,34 +31,86 @@ Protected Class Sim
 		    end
 		    
 		    // Parse status
-		    select case tdictItem.Lookup("status", "")
-		    case "new"
-		      eStatus = Status.NewState
-		      
-		    case "ready"
-		      eStatus = Status.Ready
-		      
-		    case "active"
-		      eStatus = Status.Active
-		      
-		    case "inactive"
-		      eStatus = Status.Inactive
-		      
-		    case "scheduled"
-		      eStatus = Status.Scheduled
-		      
-		    case else
-		      var ex as new UnsupportedFormatException
-		      ex.Message = "Sim status not implemented"
-		      raise ex
-		      
-		    end select
+		    eStatus = StatusFromString(tdictItem.Lookup("status", ""))
 		    
 		  end
 		  
 		  // Store original values for comparing to update
 		  mdictOriginal = tdictItem
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function StatusFromString(tsInput as String) As Twilio.Sim.Status
+		  select case tsInput
+		  case "new"
+		    return Status.NewState
+		    
+		  case "ready"
+		    return Status.Ready
+		    
+		  case "active"
+		    return Status.Active
+		    
+		  case "inactive"
+		    return Status.Inactive
+		    
+		  case "scheduled"
+		    return Status.Scheduled
+		    
+		  case else
+		    var ex as new UnsupportedFormatException
+		    ex.Message = "Sim status not implemented"
+		    raise ex
+		    
+		  end select
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function UpdateFields() As Dictionary
+		  var tsOriginalName, tsOriginalFleet as String
+		  var teOriginalStatus as Sim.Status
+		  
+		  if mdictOriginal <> nil then
+		    teOriginalStatus = StatusFromString(mdictOriginal.Lookup("status", ""))
+		    tsOriginalFleet = mdictOriginal.Lookup("fleet_sid", "")
+		    tsOriginalName = mdictOriginal.Lookup("unique_name", "")
+		    
+		  end
+		  
+		  var tdictUpdate as new Dictionary
+		  
+		  // Status changes
+		  if teOriginalStatus <> me.eStatus then
+		    select case me.eStatus
+		    case Status.Active
+		      tdictUpdate.Value("Status") = "active"
+		      
+		    case Status.Inactive
+		      tdictUpdate.Value("Status") = "inactive"
+		      
+		    case Status.Ready
+		      tdictUpdate.Value("Status") = "ready"
+		      
+		    end select
+		    
+		  end
+		  
+		  // Fleet
+		  if me.oFleet <> nil and me.oFleet.sSID <> tsOriginalFleet then
+		    tdictUpdate.Value("Fleet") = me.oFleet.sSID.Encoding
+		    
+		  end
+		  
+		  // Name
+		  if me.sUniqueName.Compare(tsOriginalName, ComparisonOptions.CaseSensitive) <> 0 then
+		    tdictUpdate.Value("UniqueName") = EncodeURLComponent(me.sUniqueName)
+		    
+		  end
+		  
+		  return tdictUpdate
+		End Function
 	#tag EndMethod
 
 
@@ -78,9 +130,31 @@ Protected Class Sim
 		Private mdictOriginal As Dictionary
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		oFleet As Twilio.Fleet
+	#tag Property, Flags = &h21
+		Private moFleet As Twilio.Fleet
 	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  return moFleet
+			End Get
+		#tag EndGetter
+		#tag Setter
+			Set
+			  moFleet = value
+			  
+			  if moFleet = nil then
+			    me.sFleetSID = ""
+			    
+			  else
+			    me.sFleetSID = moFleet.sSID
+			    
+			  end
+			End Set
+		#tag EndSetter
+		oFleet As Twilio.Fleet
+	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0
 		sAccountSID As String

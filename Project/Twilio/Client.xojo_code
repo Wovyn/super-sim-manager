@@ -273,6 +273,48 @@ Protected Class Client
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Sub UpdateResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
+		  break
+		  
+		  RaiseEvent SimUpdateSuccess(toSender.oTag)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub UpdateSim(toSim as Twilio.Sim)
+		  var tdictValues as Dictionary = toSim.UpdateFields
+		  
+		  // No changes
+		  if tdictValues.KeyCount < 1 then
+		    
+		  end
+		  
+		  // Build body
+		  var tarsPost() as String
+		  for each tvKey as Variant in tdictValues.Keys
+		    tarsPost.Add(tvKey.StringValue + "=" + tdictValues.Value(tvKey))
+		    
+		  next tvKey
+		  
+		  var tsBody as String = String.FromArray(tarsPost, "&")
+		  
+		  // Asynchronous event to fetch all Sim resources
+		  var toReq as NetRequest = NewRequest
+		  toReq.oTag = toSim
+		  
+		  toReq.RequestHeader("Content-Type") = "application/x-www-form-urlencoded; charset=utf-8"
+		  toReq.SetRequestContent(tsBody, "application/x-www-form-urlencoded")
+		  
+		  // Handle response
+		  AddHandler toReq.Completed, WeakAddressOf UpdateResponse
+		  
+		  // Request async
+		  // toReq.Send("POST", "https://supersim.twilio.com/v1/Sims/" + toSim.sSID)
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag Hook, Flags = &h0
 		Event CredentialResponse(tbAuthenticated as Boolean, tsError as String)
@@ -296,6 +338,10 @@ Protected Class Client
 
 	#tag Hook, Flags = &h0
 		Event SimListComplete()
+	#tag EndHook
+
+	#tag Hook, Flags = &h0
+		Event SimUpdateSuccess(toSim as Twilio.Sim)
 	#tag EndHook
 
 
