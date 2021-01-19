@@ -340,7 +340,13 @@ End
 		  toEdit.aroSims = taroSelection
 		  toEdit.Load(oClient)
 		  
-		  toEdit.ShowWithin(self)
+		  toEdit.ShowModalWithin(self)
+		  
+		  // Upload updates
+		  if toEdit.aroUpdates.LastIndex > -1 then
+		    break
+		    
+		  end
 		End Sub
 	#tag EndMethod
 

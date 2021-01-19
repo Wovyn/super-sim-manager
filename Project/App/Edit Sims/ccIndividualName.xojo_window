@@ -258,16 +258,34 @@ End
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function Validate() As Boolean
-		  
-		End Function
-	#tag EndMethod
-
 
 	#tag Hook, Flags = &h0
 		Event ValueChanged()
 	#tag EndHook
+
+
+	#tag Property, Flags = &h21
+		Private msUniqueName As String
+	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  return msUniqueName
+			End Get
+		#tag EndGetter
+		#tag Setter
+			Set
+			  msUniqueName = value
+			  
+			  if txtUniqueName <> nil then
+			    txtUniqueName.Text = msUniqueName
+			    
+			  end
+			End Set
+		#tag EndSetter
+		sUniqueName As String
+	#tag EndComputedProperty
 
 
 #tag EndWindowCode
@@ -275,6 +293,8 @@ End
 #tag Events txtUniqueName
 	#tag Event
 		Sub TextChange()
+		  msUniqueName = me.Text
+		  
 		  if not me.Enabled then return
 		  
 		  RaiseEvent ValueChanged
@@ -497,5 +517,13 @@ End
 		InitialValue="False"
 		Type="Boolean"
 		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="sUniqueName"
+		Visible=false
+		Group="Behavior"
+		InitialValue=""
+		Type="String"
+		EditorType="MultiLineEditor"
 	#tag EndViewProperty
 #tag EndViewBehavior

@@ -234,6 +234,18 @@ End
 
 #tag WindowCode
 	#tag Method, Flags = &h0
+		Function GetFleet() As Twilio.Fleet
+		  return moFleet
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GetStatus() As Twilio.Sim.Status
+		  return meStatus
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub LoadFleets(toClient as Twilio.Client)
 		  pmFleet.Enabled = false
 		  pmFleet.RemoveAllRows
@@ -377,16 +389,19 @@ End
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function Validate() As Boolean
-		  
-		End Function
-	#tag EndMethod
-
 
 	#tag Hook, Flags = &h0
 		Event ValueChanged()
 	#tag EndHook
+
+
+	#tag Property, Flags = &h21
+		Private meStatus As Twilio.Sim.Status
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private moFleet As Twilio.Fleet
+	#tag EndProperty
 
 
 #tag EndWindowCode
@@ -394,6 +409,8 @@ End
 #tag Events pmFleet
 	#tag Event
 		Sub Change()
+		  moFleet = me.RowTagAt(me.SelectedRowIndex)
+		  
 		  if not me.Enabled then return
 		  
 		  RaiseEvent ValueChanged
@@ -403,6 +420,8 @@ End
 #tag Events pmStatus
 	#tag Event
 		Sub Change()
+		  meStatus = me.RowTagAt(me.SelectedRowIndex)
+		  
 		  if not me.Enabled then return
 		  
 		  RaiseEvent ValueChanged

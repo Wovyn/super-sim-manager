@@ -179,6 +179,22 @@ End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Method, Flags = &h21
+		Private Sub InsertUnique(toSim as Twilio.Sim)
+		  for ti as Integer = 0 to aroUpdates.LastIndex
+		    if aroUpdates(ti).sSID = toSim.sSID then
+		      // Already in array, exit
+		      return
+		      
+		    end
+		    
+		  next ti
+		  
+		  // Not in array, append
+		  aroUpdates.Add(toSim)
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub Load(toClient as Twilio.Client)
 		  const kBottomHeight = 44
@@ -192,6 +208,9 @@ End
 		    ctlIndividual.LoadSim(aroSims(0))
 		    ctlFleetStatus.LoadSim(aroSims(0))
 		    ctlTimestamps.LoadSim(aroSims(0))
+		    
+		    // Set individual flag
+		    mbIndividual = true
 		    
 		    // Padding for fields is in the container
 		    ctlFleetStatus.Top = ctlIndividual.Top + ctlIndividual.Height - 12
@@ -225,9 +244,51 @@ End
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Sub PrepareSave()
+		  // Check each sim for changes and pass it to the updates array to upload them
+		  for each toSim as Twilio.Sim in aroSims
+		    // Name
+		    if mbIndividual then
+		      if toSim.sUniqueName.Compare(ctlIndividual.sUniqueName, ComparisonOptions.CaseSensitive) <> 0 then
+		        toSim.sUniqueName = ctlIndividual.sUniqueName
+		        InsertUnique(toSim)
+		        
+		      end
+		      
+		    end
+		    
+		    // Fleet
+		    if   ctlFleetStatus.GetFleet <> nil and _ // Fleet was set
+		      (toSim.oFleet = nil or (toSim.oFleet.sSID <> ctlFleetStatus.GetFleet.sSID)) then // Fleet doesn't match existing
+		      toSim.oFleet = ctlFleetStatus.GetFleet
+		      InsertUnique(toSim)
+		      
+		    end
+		    
+		    // Status
+		    if  ctlFleetStatus.GetStatus <> Twilio.Sim.Status.Unknown and _ // Status was set
+		      toSim.eStatus <> ctlFleetStatus.GetStatus then // Status doesn't match existing
+		      toSim.eStatus = ctlFleetStatus.GetStatus
+		      InsertUnique(toSim)
+		      
+		    end
+		    
+		  next toSim
+		End Sub
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h0
 		aroSims() As Twilio.Sim
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		aroUpdates() As Twilio.Sim
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mbIndividual As Boolean
 	#tag EndProperty
 
 
@@ -245,7 +306,7 @@ End
 	#tag EndEvent
 	#tag Event
 		Sub ClickedDefault()
-		  // Grab new fleet from the ui
+		  PrepareSave
 		  
 		  self.Close
 		End Sub
