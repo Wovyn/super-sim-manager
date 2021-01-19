@@ -24,17 +24,8 @@ Inherits Application
 		Sub Open()
 		  if Settings.Lookup("TwilioAuthSID", "") = "" then
 		    // Not setup yet
-		    var tmd as new MessageDialog
-		    tmd.Message = "Welcome to Super Sim Manager"
-		    tmd.Explanation = "To get started please add your API credentials. " + _
-		    "Once you've confiugred your credentials click the Reload button to load your account."
-		    
-		    // Greetings!
-		    call tmd.ShowModal
-		    
-		    // Show stuff
-		    winList.Show
 		    winSettings.Show
+		    winSettings.ShowWelcome
 		    
 		  else
 		    // Configured, give loading a try

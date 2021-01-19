@@ -224,6 +224,58 @@ Protected Class Client
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub TestCredentials()
+		  // Get Credentials
+		  var tsAuth as String = EncodeBase64(sSID + ":" + sToken, 0)
+		  
+		  var toReq as new NetRequest
+		  toReq.RequestHeader("Authorization") = "Basic " + tsAuth
+		  
+		  // Retain the request
+		  maroRequests.Add(toReq)
+		  
+		  // Handle server responses that aren't 200
+		  AddHandler toReq.ServerResponse, WeakAddressOf TestResponseError
+		  AddHandler toReq.Error, WeakAddressOf TestResponseError
+		  
+		  // Handle response
+		  AddHandler toReq.Completed, WeakAddressOf TestResponse
+		  
+		  // Request async
+		  toReq.Send("GET", "https://supersim.twilio.com/v1/Sims")
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub TestResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
+		  #pragma unused toSender
+		  
+		  if tdictResponse.HasKey("sims") then
+		    RaiseEvent CredentialResponse(true, "")
+		    
+		  end
+		  
+		  // Cleanup sockets
+		  SocketComplete(toSender)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub TestResponseError(toSender as Twilio.NetRequest, toErr as RuntimeException)
+		  #pragma unused toSender
+		  
+		  RaiseEvent CredentialResponse(false, toErr.Message)
+		  
+		  // Cleanup sockets
+		  SocketComplete(toSender)
+		End Sub
+	#tag EndMethod
+
+
+	#tag Hook, Flags = &h0
+		Event CredentialResponse(tbAuthenticated as Boolean, tsError as String)
+	#tag EndHook
 
 	#tag Hook, Flags = &h0
 		Event FleetListComplete()

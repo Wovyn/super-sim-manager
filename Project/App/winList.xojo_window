@@ -655,6 +655,13 @@ End
 		  end
 		  
 		  call tmd.ShowModalWithin(self)
+		  
+		  // Show settings window if auth failed
+		  if toErr.ErrorNumber = 20003 then
+		    winSettings.Show
+		    self.Visible = false
+		    
+		  end
 		End Sub
 	#tag EndEvent
 	#tag Event

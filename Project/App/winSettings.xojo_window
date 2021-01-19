@@ -10,7 +10,7 @@ Begin Window winSettings
    HasFullScreenButton=   False
    HasMaximizeButton=   True
    HasMinimizeButton=   True
-   Height          =   140
+   Height          =   168
    ImplicitInstance=   True
    MacProcID       =   0
    MaximumHeight   =   32000
@@ -32,7 +32,7 @@ Begin Window winSettings
       FontName        =   "System"
       FontSize        =   0.0
       FontUnit        =   0
-      Height          =   108
+      Height          =   136
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -210,6 +210,66 @@ Begin Window winSettings
          Visible         =   True
          Width           =   308
       End
+      Begin PushButton btnSave
+         AllowAutoDeactivate=   True
+         Bold            =   False
+         Cancel          =   False
+         Caption         =   "Save"
+         Default         =   False
+         Enabled         =   True
+         FontName        =   "System"
+         FontSize        =   0.0
+         FontUnit        =   0
+         Height          =   20
+         Index           =   -2147483648
+         InitialParent   =   "grpAPI"
+         Italic          =   False
+         Left            =   380
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   False
+         LockTop         =   True
+         MacButtonStyle  =   0
+         Scope           =   2
+         TabIndex        =   4
+         TabPanelIndex   =   0
+         TabStop         =   True
+         Tooltip         =   ""
+         Top             =   111
+         Transparent     =   False
+         Underline       =   False
+         Visible         =   True
+         Width           =   80
+      End
+      Begin ProgressWheel pwTest
+         AllowAutoDeactivate=   True
+         Enabled         =   True
+         Height          =   16
+         Index           =   -2147483648
+         InitialParent   =   "grpAPI"
+         Left            =   352
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   False
+         LockTop         =   True
+         Scope           =   2
+         TabIndex        =   5
+         TabPanelIndex   =   0
+         TabStop         =   True
+         Tooltip         =   ""
+         Top             =   113
+         Transparent     =   False
+         Visible         =   True
+         Width           =   16
+      End
+   End
+   Begin Twilio.Client oCredentialTest
+      Index           =   -2147483648
+      LockedInPosition=   False
+      Scope           =   2
+      TabPanelIndex   =   0
    End
 End
 #tag EndWindow
@@ -217,6 +277,8 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Open()
+		  pwTest.Visible = false
+		  
 		  // Load settings to UI, disable to stop TextChanged
 		  txtAuth.Enabled = false
 		  txtAuth.Text = App.Settings.Lookup("TwilioAuthToken", "").StringValue
@@ -237,6 +299,18 @@ End
 			
 		End Function
 	#tag EndMenuHandler
+
+
+	#tag Method, Flags = &h0
+		Sub ShowWelcome()
+		  var tmd as new MessageDialog
+		  tmd.Message = "Welcome to Super Sim Manager"
+		  tmd.Explanation = "To get started please add your API credentials. " + _
+		  "Click save to test the credentials and use Super Sim Manager."
+		  
+		  call tmd.ShowModalWithin(self)
+		End Sub
+	#tag EndMethod
 
 
 #tag EndWindowCode
@@ -274,6 +348,42 @@ End
 		  
 		  // Save
 		  App.Settings.Value("TwilioAuthToken") = me.Text.Trim
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events btnSave
+	#tag Event
+		Sub Action()
+		  me.Enabled = false
+		  pwTest.Visible = true
+		  
+		  // Set client auth and reload sim list
+		  oCredentialTest.sSID   = txtSID.Text.Trim
+		  oCredentialTest.sToken = txtAuth.Text.Trim
+		  
+		  oCredentialTest.TestCredentials
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events oCredentialTest
+	#tag Event
+		Sub CredentialResponse(tbAuthenticated as Boolean, tsError as String)
+		  if tbAuthenticated then
+		    // Good to go
+		    winList.Show
+		    winList.LoadClient
+		    
+		  else
+		    btnSave.Enabled = true
+		    pwTest.Visible = false
+		    
+		    var tmd as new MessageDialog
+		    tmd.Message = "Server Response Failure"
+		    tmd.Explanation = tsError
+		    
+		    call tmd.ShowModalWithin(self)
+		    
+		  end
 		End Sub
 	#tag EndEvent
 #tag EndEvents
