@@ -275,9 +275,11 @@ Protected Class Client
 
 	#tag Method, Flags = &h21
 		Private Sub UpdateResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
-		  break
+		  #pragma unused toSender
 		  
-		  RaiseEvent SimUpdateSuccess(toSender.oTag)
+		  var toNew as new Twilio.Sim(tdictResponse)
+		  
+		  RaiseEvent SimUpdateSuccess(toNew)
 		End Sub
 	#tag EndMethod
 
@@ -310,7 +312,7 @@ Protected Class Client
 		  AddHandler toReq.Completed, WeakAddressOf UpdateResponse
 		  
 		  // Request async
-		  // toReq.Send("POST", "https://supersim.twilio.com/v1/Sims/" + toSim.sSID)
+		  toReq.Send("POST", "https://supersim.twilio.com/v1/Sims/" + toSim.sSID)
 		  
 		End Sub
 	#tag EndMethod
