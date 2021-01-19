@@ -17,7 +17,7 @@ Protected Class Sim
 		      tsDateCreated = tsDateCreated.Replace("T", " ")
 		      tsDateCreated = tsDateCreated.Replace("Z", "")
 		      
-		      dtmCreated = DateTime.FromString(tsDateCreated)
+		      dtmCreated = DateTime.FromString(tsDateCreated, nil, new TimeZone("UTC"))
 		      
 		    end
 		    
@@ -27,7 +27,7 @@ Protected Class Sim
 		      tsDateUpdated = tsDateUpdated.Replace("T", " ")
 		      tsDateUpdated = tsDateUpdated.Replace("Z", "")
 		      
-		      dtmUpdated = DateTime.FromString(tsDateUpdated)
+		      dtmUpdated = DateTime.FromString(tsDateUpdated, nil, new TimeZone("UTC"))
 		      
 		    end
 		    
@@ -116,6 +116,62 @@ Protected Class Sim
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="sAccountSID"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="sFleetSID"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="sICCID"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="sSID"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="sStatus"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="sUniqueName"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="sURL"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
