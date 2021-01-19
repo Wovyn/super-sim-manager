@@ -764,7 +764,7 @@ End
 		  #pragma unused y
 		  
 		  if column = 1 or column = 6 then
-		    g.FontName = App.kMonospacedFont
+		    g.FontName = kMonospacedFont
 		    
 		  end
 		End Function
