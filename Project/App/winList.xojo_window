@@ -330,6 +330,43 @@ End
 
 
 	#tag Method, Flags = &h21
+		Private Sub EditSelection()
+		  var taroSelection() as Twilio.Sim = GetSelection
+		  
+		  // No selection
+		  if taroSelection.Count < 1 then return
+		  
+		  var toEdit as new winEditSims
+		  toEdit.aroSims = taroSelection
+		  toEdit.Load(oClient)
+		  
+		  toEdit.ShowWithin(self)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function GetSelection() As Twilio.Sim()
+		  // Get selected row tags that contain Twilio.Sims
+		  var taroSims() as Twilio.Sim
+		  
+		  for ti as Integer = (lbSims.RowCount - 1) downto 0
+		    if lbSims.CellCheckBoxValueAt(ti, 0) = true then
+		      // Checked
+		      taroSims.Add(lbSims.RowTagAt(ti))
+		      
+		    elseif lbSims.Selected(ti) then
+		      // Row selected (via click)
+		      taroSims.Add(lbSims.RowTagAt(ti))
+		      
+		    end
+		    
+		  next ti
+		  
+		  return taroSims
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
 		Private Sub HandleLoadResponse()
 		  // Wait for all the parts to load, then assemble the associations
 		  if not mbLoadedFleets then return
@@ -520,21 +557,8 @@ End
 		  // Sets bulk action button states
 		  btnEdit.Enabled = false
 		  
-		  var tiSelectedCount as Integer
-		  
-		  for ti as Integer = (lbSims.RowCount - 1) downto 0
-		    // Count selection
-		    if lbSims.CellCheckBoxValueAt(ti, 0) = true then
-		      // Checked
-		      tiSelectedCount = tiSelectedCount + 1
-		      
-		    elseif lbSims.Selected(ti) then
-		      // Row selected (via click)
-		      tiSelectedCount = tiSelectedCount + 1
-		      
-		    end
-		    
-		  next ti
+		  // Use the shortcut GetSelection function to count the selected rows
+		  var tiSelectedCount as Integer = GetSelection.Count
 		  
 		  // Set plural state
 		  btnEdit.Caption = if(tiSelectedCount = 1, kEditSim, kEditSims)
@@ -753,6 +777,11 @@ End
 		  SetEnabledState
 		End Sub
 	#tag EndEvent
+	#tag Event
+		Sub DoubleClick()
+		  EditSelection
+		End Sub
+	#tag EndEvent
 #tag EndEvents
 #tag Events chkAll
 	#tag Event
@@ -776,18 +805,7 @@ End
 #tag Events btnEdit
 	#tag Event
 		Sub Action()
-		  // Request the new status
-		  var toSelectNew as new winBulkSetStatus
-		  toSelectNew.ShowModalWithin(self)
-		  
-		  // User cancelled
-		  if toSelectNew.sNewStatus = "" then return
-		  
-		  var tmd as new MessageDialog
-		  tmd.Message = "Not Yet Implemented"
-		  tmd.Explanation = "This feature has not yet been implemented while we await API write permission."
-		  
-		  call tmd.ShowModalWithin(self)
+		  EditSelection
 		End Sub
 	#tag EndEvent
 #tag EndEvents

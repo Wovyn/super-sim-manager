@@ -1,5 +1,5 @@
 #tag Window
-Begin Window winBulkSetFleet
+Begin Window winEditSims
    Backdrop        =   0
    BackgroundColor =   &cFFFFFF00
    Composite       =   False
@@ -10,55 +10,20 @@ Begin Window winBulkSetFleet
    HasFullScreenButton=   False
    HasMaximizeButton=   False
    HasMinimizeButton=   False
-   Height          =   120
+   Height          =   180
    ImplicitInstance=   False
    MacProcID       =   0
-   MaximumHeight   =   120
-   MaximumWidth    =   310
+   MaximumHeight   =   180
+   MaximumWidth    =   3200
    MenuBar         =   0
    MenuBarVisible  =   True
-   MinimumHeight   =   120
-   MinimumWidth    =   310
+   MinimumHeight   =   180
+   MinimumWidth    =   448
    Resizeable      =   False
    Title           =   "Bulk Action: Set Fleet"
    Type            =   8
    Visible         =   False
-   Width           =   310
-   Begin Label lblHeader
-      AllowAutoDeactivate=   True
-      Bold            =   True
-      DataField       =   ""
-      DataSource      =   ""
-      Enabled         =   True
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
-      Height          =   20
-      Index           =   -2147483648
-      InitialParent   =   ""
-      Italic          =   False
-      Left            =   20
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   True
-      LockTop         =   True
-      Multiline       =   False
-      Scope           =   2
-      Selectable      =   False
-      TabIndex        =   0
-      TabPanelIndex   =   0
-      TabStop         =   True
-      Text            =   "Bulk Action: Set Fleet"
-      TextAlignment   =   2
-      TextColor       =   &c00000000
-      Tooltip         =   ""
-      Top             =   12
-      Transparent     =   False
-      Underline       =   False
-      Visible         =   True
-      Width           =   270
-   End
+   Width           =   448
    Begin Label lblFleet
       AllowAutoDeactivate=   True
       Bold            =   False
@@ -88,7 +53,7 @@ Begin Window winBulkSetFleet
       TextAlignment   =   3
       TextColor       =   &c00000000
       Tooltip         =   ""
-      Top             =   44
+      Top             =   92
       Transparent     =   False
       Underline       =   False
       Visible         =   True
@@ -120,7 +85,7 @@ Begin Window winBulkSetFleet
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   43
+      Top             =   91
       Transparent     =   False
       Underline       =   False
       Visible         =   True
@@ -139,7 +104,7 @@ Begin Window winBulkSetFleet
       HasBackgroundColor=   False
       Height          =   22
       InitialParent   =   ""
-      Left            =   117
+      Left            =   255
       LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   False
@@ -150,17 +115,197 @@ Begin Window winBulkSetFleet
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   78
+      Top             =   138
       Transparent     =   True
       Visible         =   True
       Width           =   173
+   End
+   Begin PopupMenu pmStatus
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      InitialValue    =   "Ready\nActive\nInactive\nScheduled"
+      Italic          =   False
+      Left            =   69
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Scope           =   2
+      SelectedRowIndex=   0
+      TabIndex        =   4
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   -109
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   208
+   End
+   Begin Label lblStatus
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Multiline       =   False
+      Scope           =   2
+      Selectable      =   False
+      TabIndex        =   5
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "Status:"
+      TextAlignment   =   3
+      TextColor       =   &c00000000
+      Tooltip         =   ""
+      Top             =   124
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   50
+   End
+   Begin Label lblUniqueName
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Multiline       =   False
+      Scope           =   2
+      Selectable      =   False
+      TabIndex        =   6
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "Unique Name:"
+      TextAlignment   =   3
+      TextColor       =   &c00000000
+      Tooltip         =   ""
+      Top             =   20
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   96
+   End
+   Begin TextField txtUniqueName
+      AllowAutoDeactivate=   True
+      AllowFocusRing  =   True
+      AllowSpellChecking=   False
+      AllowTabs       =   False
+      BackgroundColor =   &cFFFFFF00
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Format          =   ""
+      HasBorder       =   True
+      Height          =   22
+      Hint            =   ""
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   128
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      MaximumCharactersAllowed=   0
+      Password        =   False
+      ReadOnly        =   False
+      Scope           =   2
+      TabIndex        =   7
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   ""
+      TextAlignment   =   0
+      TextColor       =   &c00000000
+      Tooltip         =   ""
+      Top             =   19
+      Transparent     =   False
+      Underline       =   False
+      ValidationMask  =   ""
+      Visible         =   True
+      Width           =   300
+   End
+   Begin Label lblMultiple
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Multiline       =   False
+      Scope           =   2
+      Selectable      =   False
+      TabIndex        =   8
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "#kMultipleSelected"
+      TextAlignment   =   2
+      TextColor       =   &c00000000
+      Tooltip         =   ""
+      Top             =   -47
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   408
    End
 End
 #tag EndWindow
 
 #tag WindowCode
 	#tag Method, Flags = &h0
-		Sub LoadFleets(toClient as Twilio.Client)
+		Sub Load(toClient as Twilio.Client)
 		  pmFleet.Enabled = false
 		  pmFleet.RemoveAllRows
 		  
@@ -178,13 +323,35 @@ End
 		  
 		  pmFleet.SelectedRowIndex = 0
 		  pmFleet.Enabled = true
+		  
+		  // Set name visibility
+		  var tiCount as Integer = aroSims.Count
+		  if tiCount > 1 then
+		    lblMultiple.Text = kEditX.Replace("%count%", aroSims.Count.ToString)
+		    lblMultiple.Top = lblUniqueName.Top
+		    
+		    lblUniqueName.Eanbled = false
+		    lblUniqueName.Visible = false
+		    
+		    txtUniqueName.Eanbled = false
+		    txtUniqueName.Visible = false
+		    
+		  end
 		End Sub
 	#tag EndMethod
 
 
 	#tag Property, Flags = &h0
+		aroSims() As Twilio.Sim
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		oSelectedFleet As Twilio.Fleet
 	#tag EndProperty
+
+
+	#tag Constant, Name = kMultipleSelected, Type = String, Dynamic = False, Default = \"Editing %count% Sims", Scope = Private
+	#tag EndConstant
 
 
 #tag EndWindowCode
