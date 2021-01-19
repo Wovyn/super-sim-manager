@@ -176,6 +176,12 @@ End
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function Validate() As Boolean
+		  
+		End Function
+	#tag EndMethod
+
 
 #tag EndWindowCode
 

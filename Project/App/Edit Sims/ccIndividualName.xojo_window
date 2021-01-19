@@ -251,13 +251,36 @@ End
 		Sub LoadSim(toSim as Twilio.Sim)
 		  lbliccidValue.Text = toSim.sICCID
 		  lblSidValue.Text = toSim.sSID
+		  
+		  txtUniqueName.Enabled = false
 		  txtUniqueName.Text = toSim.sUniqueName
+		  txtUniqueName.Enabled = true
 		End Sub
 	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Validate() As Boolean
+		  
+		End Function
+	#tag EndMethod
+
+
+	#tag Hook, Flags = &h0
+		Event ValueChanged()
+	#tag EndHook
 
 
 #tag EndWindowCode
 
+#tag Events txtUniqueName
+	#tag Event
+		Sub TextChange()
+		  if not me.Enabled then return
+		  
+		  RaiseEvent ValueChanged
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag ViewBehavior
 	#tag ViewProperty
 		Name="Name"

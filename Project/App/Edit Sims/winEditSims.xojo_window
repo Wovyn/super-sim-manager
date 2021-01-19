@@ -36,7 +36,6 @@ Begin Window winEditSims
       EraseBackground =   False
       HasBackgroundColor=   False
       Height          =   22
-      Index           =   -2147483648
       InitialParent   =   ""
       Left            =   255
       LockBottom      =   True
@@ -66,7 +65,6 @@ Begin Window winEditSims
       EraseBackground =   True
       HasBackgroundColor=   False
       Height          =   109
-      Index           =   -2147483648
       InitialParent   =   ""
       Left            =   0
       LockBottom      =   False
@@ -131,7 +129,6 @@ Begin Window winEditSims
       EraseBackground =   True
       HasBackgroundColor=   False
       Height          =   110
-      Index           =   -2147483648
       InitialParent   =   ""
       Left            =   0
       LockBottom      =   False
@@ -161,7 +158,6 @@ Begin Window winEditSims
       EraseBackground =   True
       HasBackgroundColor=   False
       Height          =   68
-      Index           =   -2147483648
       InitialParent   =   ""
       Left            =   0
       LockBottom      =   False
@@ -223,6 +219,9 @@ End
 		    self.Height = ctlFleetStatus.Top + ctlFleetStatus.Height + kBottomHeight
 		    
 		  end
+		  
+		  ctlOK.DefaultButton.Caption = "Save"
+		  ctlOK.DefaultButton.Enabled = false
 		End Sub
 	#tag EndMethod
 
@@ -249,6 +248,20 @@ End
 		  // Grab new fleet from the ui
 		  
 		  self.Close
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events ctlIndividual
+	#tag Event
+		Sub ValueChanged()
+		  ctlOK.DefaultButton.Enabled = true
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events ctlFleetStatus
+	#tag Event
+		Sub ValueChanged()
+		  ctlOK.DefaultButton.Enabled = true
 		End Sub
 	#tag EndEvent
 #tag EndEvents

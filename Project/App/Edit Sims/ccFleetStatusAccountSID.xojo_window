@@ -263,6 +263,9 @@ End
 		  // Load default values
 		  LoadSim(aroSelection(0))
 		  
+		  pmFleet.Enabled = false
+		  pmStatus.Enabled = false
+		  
 		  pmFleet.AddRowAt(0, kMultipleSelected)
 		  pmFleet.AddRowAt(1, MenuItem.TextSeparator)
 		  pmFleet.SelectedRowIndex = 0
@@ -299,7 +302,8 @@ End
 		    
 		  next toSim
 		  
-		  
+		  pmFleet.Enabled = true
+		  pmStatus.Enabled = true
 		End Sub
 	#tag EndMethod
 
@@ -313,7 +317,9 @@ End
 		    if toTag = nil then continue for ti
 		    
 		    if toSim.oFleet <> nil and toTag.sSID = toSim.oFleet.sSID then
+		      pmFleet.Enabled = false
 		      pmFleet.SelectedRowIndex = ti
+		      pmFleet.Enabled = true
 		      exit for ti
 		      
 		    end
@@ -331,6 +337,7 @@ End
 	#tag Method, Flags = &h21
 		Private Sub LoadStatusByCurrent(teCurrentStatus as Twilio.Sim.Status)
 		  // The status menu options differ by current state
+		  pmStatus.Enabled = false
 		  pmStatus.RemoveAllRows
 		  
 		  select case teCurrentStatus
@@ -365,12 +372,43 @@ End
 		    pmStatus.SelectedRowIndex = 0
 		    
 		  end select
+		  
+		  pmStatus.Enabled = true
 		End Sub
 	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Validate() As Boolean
+		  
+		End Function
+	#tag EndMethod
+
+
+	#tag Hook, Flags = &h0
+		Event ValueChanged()
+	#tag EndHook
 
 
 #tag EndWindowCode
 
+#tag Events pmFleet
+	#tag Event
+		Sub Change()
+		  if not me.Enabled then return
+		  
+		  RaiseEvent ValueChanged
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events pmStatus
+	#tag Event
+		Sub Change()
+		  if not me.Enabled then return
+		  
+		  RaiseEvent ValueChanged
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag ViewBehavior
 	#tag ViewProperty
 		Name="Name"
