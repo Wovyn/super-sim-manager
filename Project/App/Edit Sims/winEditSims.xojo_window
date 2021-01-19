@@ -259,9 +259,11 @@ End
 		    end
 		    
 		    // Fleet
-		    if   ctlFleetStatus.GetFleet <> nil and _ // Fleet was set
-		      (toSim.oFleet = nil or (toSim.oFleet.sSID <> ctlFleetStatus.GetFleet.sSID)) then // Fleet doesn't match existing
-		      toSim.oFleet = ctlFleetStatus.GetFleet
+		    var toSelectedFleet as Twilio.Fleet = ctlFleetStatus.GetFleet
+		    var toSimFleet as Twilio.Fleet = toSim.oFleet
+		    if   toSelectedFleet <> nil and _ // Fleet was set
+		      (toSimFleet = nil or (toSimFleet.sSID <> toSelectedFleet.sSID)) then // Fleet doesn't match existing
+		      toSim.oFleet = toSelectedFleet
 		      InsertUnique(toSim)
 		      
 		    end

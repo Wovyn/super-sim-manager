@@ -344,7 +344,11 @@ End
 		  
 		  // Upload updates
 		  if toEdit.aroUpdates.LastIndex > -1 then
-		    break
+		    var toUpdate as new winUpdate
+		    toUpdate.aroUpdateSims = toEdit.aroUpdates
+		    
+		    // Not modal to allow async responses
+		    toUpdate.ShowWithin(self)
 		    
 		  end
 		End Sub

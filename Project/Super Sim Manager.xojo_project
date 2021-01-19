@@ -14,6 +14,7 @@ Class=Sim;Twilio/Sim.xojo_code;&h00000000213FF7FF;&h000000003C08AFFF;false
 Class=NetworkAccessProfile;Twilio/NetworkAccessProfile.xojo_code;&h000000006D6ACFFF;&h000000003C08AFFF;false
 Class=Fleet;Twilio/Fleet.xojo_code;&h000000000543F7FF;&h000000003C08AFFF;false
 Window=winList;App/winList.xojo_window;&h00000000640A57FF;&h0000000053C67FFF;false
+Window=winUpdate;App/winUpdate.xojo_window;&h0000000067F2F7FF;&h0000000053C67FFF;false
 Class=NetRequest;Twilio/NetRequest.xojo_code;&h0000000065B937FF;&h000000003C08AFFF;false
 Class=Client;Twilio/Client.xojo_code;&h0000000004FE3FFF;&h000000003C08AFFF;false
 Class=RequestError;Twilio/RequestError.xojo_code;&h000000000727DFFF;&h000000003C08AFFF;false
