@@ -634,10 +634,6 @@ End
 	#tag Constant, Name = kEditSims, Type = String, Dynamic = False, Default = \"Edit Sims", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = kMonospacedFont, Type = String, Dynamic = False, Default = \"Courier New", Scope = Private
-		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"Menlo"
-	#tag EndConstant
-
 
 #tag EndWindowCode
 
@@ -765,7 +761,7 @@ End
 		  #pragma unused y
 		  
 		  if column = 1 or column = 6 then
-		    g.FontName = kMonospacedFont
+		    g.FontName = App.kMonospacedFont
 		    
 		  end
 		End Function
