@@ -10,6 +10,37 @@ Protected Module Globals
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function ToString(extends teStatus as Twilio.Sim.Status) As String
+		  select case teStatus
+		  case Twilio.Sim.Status.Unknown
+		    return "Unknown"
+		    
+		  case Twilio.Sim.Status.NewState
+		    return "New"
+		    
+		  case Twilio.Sim.Status.Ready
+		    return "Ready"
+		    
+		  case Twilio.Sim.Status.Active
+		    return "Active"
+		    
+		  case Twilio.Sim.Status.Inactive
+		    return "Inactive"
+		    
+		  case Twilio.Sim.Status.Scheduled
+		    return "Scheduled"
+		    
+		  case else
+		    var ex as new UnsupportedFormatException
+		    ex.Message = "Sim status not implemented"
+		    raise ex
+		    
+		  end select
+		End Function
+	#tag EndMethod
+
+
 	#tag Constant, Name = kMonospacedFont, Type = String, Dynamic = False, Default = \"Courier New", Scope = Public
 		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"Menlo"
 	#tag EndConstant

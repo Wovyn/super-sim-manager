@@ -502,7 +502,7 @@ End
 		    end
 		    
 		    tarsRow.Add(toSim.sICCID)
-		    tarsRow.Add(toSim.sStatus)
+		    tarsRow.Add(toSim.eStatus.ToString)
 		    
 		    // Fleet
 		    if toSim.oFleet <> nil then

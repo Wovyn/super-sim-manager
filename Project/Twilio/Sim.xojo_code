@@ -7,7 +7,6 @@ Protected Class Sim
 		    sFleetSID = tdictItem.Lookup("fleet_sid", "")
 		    sICCID = tdictItem.Lookup("iccid", "")
 		    sSID = tdictItem.Lookup("sid", "")
-		    sStatus = tdictItem.Lookup("status", "")
 		    sUniqueName = tdictItem.Lookup("unique_name", "")
 		    sURL = tdictItem.Lookup("url", "")
 		    
@@ -31,6 +30,30 @@ Protected Class Sim
 		      
 		    end
 		    
+		    // Parse status
+		    select case tdictItem.Lookup("status", "")
+		    case "new"
+		      eStatus = Status.NewState
+		      
+		    case "ready"
+		      eStatus = Status.Ready
+		      
+		    case "active"
+		      eStatus = Status.Active
+		      
+		    case "inactive"
+		      eStatus = Status.Inactive
+		      
+		    case "scheduled"
+		      eStatus = Status.Scheduled
+		      
+		    case else
+		      var ex as new UnsupportedFormatException
+		      ex.Message = "Sim status not implemented"
+		      raise ex
+		      
+		    end select
+		    
 		  end
 		End Sub
 	#tag EndMethod
@@ -42,6 +65,10 @@ Protected Class Sim
 
 	#tag Property, Flags = &h0
 		dtmUpdated As DateTime
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		eStatus As Twilio.Sim.Status
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -65,16 +92,22 @@ Protected Class Sim
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		sStatus As String
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
 		sUniqueName As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
 		sURL As String
 	#tag EndProperty
+
+
+	#tag Enum, Name = Status, Type = Integer, Flags = &h0
+		Unknown
+		  NewState
+		  Ready
+		  Active
+		  Inactive
+		Scheduled
+	#tag EndEnum
 
 
 	#tag ViewBehavior
@@ -124,7 +157,7 @@ Protected Class Sim
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="sFleetSID"
@@ -132,7 +165,7 @@ Protected Class Sim
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="sICCID"
@@ -140,7 +173,7 @@ Protected Class Sim
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="sSID"
@@ -148,15 +181,15 @@ Protected Class Sim
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="sStatus"
+			Name="eStatus"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="sUniqueName"
@@ -164,7 +197,7 @@ Protected Class Sim
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="sURL"
@@ -172,7 +205,7 @@ Protected Class Sim
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class
