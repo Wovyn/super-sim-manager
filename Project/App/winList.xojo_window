@@ -743,6 +743,9 @@ End
 	#tag EndEvent
 	#tag Event
 		Sub CellAction(row As Integer, column As Integer)
+		  #pragma unused row
+		  #pragma unused column
+		  
 		  if me.Enabled = false then return
 		  
 		  // Sync Check All state
