@@ -147,6 +147,7 @@ Protected Class Client
 		  maroRequests.Add(toSock)
 		  
 		  // Handle server responses that aren't 200
+		  AddHandler toSock.Error, WeakAddressOf HandleError
 		  AddHandler toSock.ServerResponse, WeakAddressOf HandleServerResponse
 		  
 		  return toSock

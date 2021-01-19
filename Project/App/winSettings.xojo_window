@@ -269,6 +269,8 @@ Begin Window winSettings
       Index           =   -2147483648
       LockedInPosition=   False
       Scope           =   2
+      sSID            =   ""
+      sToken          =   ""
       TabPanelIndex   =   0
    End
 End
@@ -384,6 +386,18 @@ End
 		    call tmd.ShowModalWithin(self)
 		    
 		  end
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub RequestError(ex as RuntimeException)
+		  btnSave.Enabled = true
+		  pwTest.Visible = false
+		  
+		  var tmd as new MessageDialog
+		  tmd.Message = "Server Response Failure"
+		  tmd.Explanation = ex.Message
+		  
+		  call tmd.ShowModalWithin(self)
 		End Sub
 	#tag EndEvent
 #tag EndEvents

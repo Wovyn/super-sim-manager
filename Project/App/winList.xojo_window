@@ -723,6 +723,19 @@ End
 		  HandleLoadResponse
 		End Sub
 	#tag EndEvent
+	#tag Event
+		Sub RequestError(ex as RuntimeException)
+		  // Re-enable UI
+		  btnReload.Enabled = true
+		  pwWait.Visible = false
+		  
+		  var tmd as new MessageDialog
+		  tmd.Message = "Server Response Failure"
+		  tmd.Explanation = ex.Message
+		  
+		  call tmd.ShowModalWithin(self)
+		End Sub
+	#tag EndEvent
 #tag EndEvents
 #tag Events btnReload
 	#tag Event
