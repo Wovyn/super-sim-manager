@@ -1,192 +1,30 @@
 #tag Window
-Begin Window winEditSims
+Begin ContainerControl ccIndividualName
+   AllowAutoDeactivate=   True
+   AllowFocus      =   False
+   AllowFocusRing  =   False
+   AllowTabs       =   True
    Backdrop        =   0
    BackgroundColor =   &cFFFFFF00
-   Composite       =   False
-   DefaultLocation =   3
-   FullScreen      =   False
+   DoubleBuffer    =   False
+   Enabled         =   True
+   EraseBackground =   True
    HasBackgroundColor=   False
-   HasCloseButton  =   True
-   HasFullScreenButton=   False
-   HasMaximizeButton=   False
-   HasMinimizeButton=   False
-   Height          =   180
-   ImplicitInstance=   False
-   MacProcID       =   0
-   MaximumHeight   =   180
-   MaximumWidth    =   3200
-   MenuBar         =   0
-   MenuBarVisible  =   True
-   MinimumHeight   =   180
-   MinimumWidth    =   448
-   Resizeable      =   False
-   Title           =   "Bulk Action: Set Fleet"
-   Type            =   8
-   Visible         =   False
+   Height          =   109
+   InitialParent   =   ""
+   Left            =   0
+   LockBottom      =   False
+   LockLeft        =   True
+   LockRight       =   False
+   LockTop         =   True
+   TabIndex        =   0
+   TabPanelIndex   =   0
+   TabStop         =   True
+   Tooltip         =   ""
+   Top             =   0
+   Transparent     =   True
+   Visible         =   True
    Width           =   448
-   Begin Label lblFleet
-      AllowAutoDeactivate=   True
-      Bold            =   False
-      DataField       =   ""
-      DataSource      =   ""
-      Enabled         =   True
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
-      Height          =   20
-      Index           =   -2147483648
-      InitialParent   =   ""
-      Italic          =   False
-      Left            =   20
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      Multiline       =   False
-      Scope           =   2
-      Selectable      =   False
-      TabIndex        =   1
-      TabPanelIndex   =   0
-      TabStop         =   True
-      Text            =   "Fleet:"
-      TextAlignment   =   3
-      TextColor       =   &c00000000
-      Tooltip         =   ""
-      Top             =   92
-      Transparent     =   False
-      Underline       =   False
-      Visible         =   True
-      Width           =   50
-   End
-   Begin PopupMenu pmFleet
-      AllowAutoDeactivate=   True
-      Bold            =   False
-      DataField       =   ""
-      DataSource      =   ""
-      Enabled         =   True
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
-      Height          =   20
-      Index           =   -2147483648
-      InitialParent   =   ""
-      InitialValue    =   "Fleet List"
-      Italic          =   False
-      Left            =   82
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      Scope           =   2
-      SelectedRowIndex=   0
-      TabIndex        =   2
-      TabPanelIndex   =   0
-      TabStop         =   True
-      Tooltip         =   ""
-      Top             =   91
-      Transparent     =   False
-      Underline       =   False
-      Visible         =   True
-      Width           =   208
-   End
-   Begin ccOKCancel ctlOK
-      AllowAutoDeactivate=   True
-      AllowFocus      =   False
-      AllowFocusRing  =   False
-      AllowTabs       =   False
-      Backdrop        =   0
-      BackgroundColor =   &cFFFFFF00
-      DoubleBuffer    =   False
-      Enabled         =   True
-      EraseBackground =   False
-      HasBackgroundColor=   False
-      Height          =   22
-      InitialParent   =   ""
-      Left            =   255
-      LockBottom      =   True
-      LockedInPosition=   False
-      LockLeft        =   False
-      LockRight       =   True
-      LockTop         =   False
-      Scope           =   2
-      TabIndex        =   3
-      TabPanelIndex   =   0
-      TabStop         =   True
-      Tooltip         =   ""
-      Top             =   138
-      Transparent     =   True
-      Visible         =   True
-      Width           =   173
-   End
-   Begin PopupMenu pmStatus
-      AllowAutoDeactivate=   True
-      Bold            =   False
-      DataField       =   ""
-      DataSource      =   ""
-      Enabled         =   True
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
-      Height          =   20
-      Index           =   -2147483648
-      InitialParent   =   ""
-      InitialValue    =   "Ready\nActive\nInactive\nScheduled"
-      Italic          =   False
-      Left            =   69
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      Scope           =   2
-      SelectedRowIndex=   0
-      TabIndex        =   4
-      TabPanelIndex   =   0
-      TabStop         =   True
-      Tooltip         =   ""
-      Top             =   -109
-      Transparent     =   False
-      Underline       =   False
-      Visible         =   True
-      Width           =   208
-   End
-   Begin Label lblStatus
-      AllowAutoDeactivate=   True
-      Bold            =   False
-      DataField       =   ""
-      DataSource      =   ""
-      Enabled         =   True
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
-      Height          =   20
-      Index           =   -2147483648
-      InitialParent   =   ""
-      Italic          =   False
-      Left            =   20
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      Multiline       =   False
-      Scope           =   2
-      Selectable      =   False
-      TabIndex        =   5
-      TabPanelIndex   =   0
-      TabStop         =   True
-      Text            =   "Status:"
-      TextAlignment   =   3
-      TextColor       =   &c00000000
-      Tooltip         =   ""
-      Top             =   124
-      Transparent     =   False
-      Underline       =   False
-      Visible         =   True
-      Width           =   50
-   End
    Begin Label lblUniqueName
       AllowAutoDeactivate=   True
       Bold            =   False
@@ -209,14 +47,14 @@ Begin Window winEditSims
       Multiline       =   False
       Scope           =   2
       Selectable      =   False
-      TabIndex        =   6
+      TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "Unique Name:"
       TextAlignment   =   3
       TextColor       =   &c00000000
       Tooltip         =   ""
-      Top             =   20
+      Top             =   21
       Transparent     =   False
       Underline       =   False
       Visible         =   True
@@ -251,21 +89,21 @@ Begin Window winEditSims
       Password        =   False
       ReadOnly        =   False
       Scope           =   2
-      TabIndex        =   7
+      TabIndex        =   1
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   ""
       TextAlignment   =   0
       TextColor       =   &c00000000
       Tooltip         =   ""
-      Top             =   19
+      Top             =   20
       Transparent     =   False
       Underline       =   False
       ValidationMask  =   ""
       Visible         =   True
       Width           =   300
    End
-   Begin Label lblMultiple
+   Begin Label lblSid
       AllowAutoDeactivate=   True
       Bold            =   False
       DataField       =   ""
@@ -287,100 +125,142 @@ Begin Window winEditSims
       Multiline       =   False
       Scope           =   2
       Selectable      =   False
-      TabIndex        =   8
+      TabIndex        =   2
       TabPanelIndex   =   0
       TabStop         =   True
-      Text            =   "#kMultipleSelected"
-      TextAlignment   =   2
+      Text            =   "SID:"
+      TextAlignment   =   3
       TextColor       =   &c00000000
       Tooltip         =   ""
-      Top             =   -47
+      Top             =   53
       Transparent     =   False
       Underline       =   False
       Visible         =   True
-      Width           =   408
+      Width           =   96
+   End
+   Begin Label lbliccid
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Multiline       =   False
+      Scope           =   2
+      Selectable      =   False
+      TabIndex        =   3
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "SIM ICCID:"
+      TextAlignment   =   3
+      TextColor       =   &c00000000
+      Tooltip         =   ""
+      Top             =   77
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   96
+   End
+   Begin Label lblSidValue
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      FontName        =   "#App.kMonospacedFont"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   128
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Multiline       =   False
+      Scope           =   2
+      Selectable      =   True
+      TabIndex        =   4
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "value"
+      TextAlignment   =   0
+      TextColor       =   &c00000000
+      Tooltip         =   ""
+      Top             =   53
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   300
+   End
+   Begin Label lbliccidValue
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      FontName        =   "#App.kMonospacedFont"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   128
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Multiline       =   False
+      Scope           =   2
+      Selectable      =   True
+      TabIndex        =   5
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "value"
+      TextAlignment   =   0
+      TextColor       =   &c00000000
+      Tooltip         =   ""
+      Top             =   77
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   300
    End
 End
 #tag EndWindow
 
 #tag WindowCode
 	#tag Method, Flags = &h0
-		Sub Load(toClient as Twilio.Client)
-		  pmFleet.Enabled = false
-		  pmFleet.RemoveAllRows
-		  
-		  for each toFleet as Twilio.Fleet in toClient.aroFleets
-		    pmFleet.AddRow(toFleet.sUniqueName)
-		    pmFleet.RowTagAt(pmFleet.LastAddedRowIndex) = toFleet
-		    
-		  next toFleet
-		  
-		  // No fleets on this account
-		  if pmFleet.RowCount < 1 then
-		    pmFleet.AddRow("No Fleets")
-		    
-		  end
-		  
-		  pmFleet.SelectedRowIndex = 0
-		  pmFleet.Enabled = true
-		  
-		  // Set name visibility
-		  var tiCount as Integer = aroSims.Count
-		  if tiCount > 1 then
-		    lblMultiple.Text = kEditX.Replace("%count%", aroSims.Count.ToString)
-		    lblMultiple.Top = lblUniqueName.Top
-		    
-		    lblUniqueName.Eanbled = false
-		    lblUniqueName.Visible = false
-		    
-		    txtUniqueName.Eanbled = false
-		    txtUniqueName.Visible = false
-		    
-		  end
+		Sub LoadSim(toSim as Twilio.Sim)
+		  lbliccidValue.Text = toSim.sICCID
+		  lblSidValue.Text = toSim.sSID
+		  txtUniqueName.Text = toSim.sUniqueName
 		End Sub
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h0
-		aroSims() As Twilio.Sim
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		oSelectedFleet As Twilio.Fleet
-	#tag EndProperty
-
-
-	#tag Constant, Name = kMultipleSelected, Type = String, Dynamic = False, Default = \"Editing %count% Sims", Scope = Private
-	#tag EndConstant
-
-
 #tag EndWindowCode
 
-#tag Events ctlOK
-	#tag Event
-		Sub ClickedCancel()
-		  self.Close
-		End Sub
-	#tag EndEvent
-	#tag Event
-		Sub ClickedDefault()
-		  // Grab new fleet from the ui
-		  oSelectedFleet = pmFleet.RowTagAt(pmFleet.SelectedRowIndex)
-		  self.Close
-		End Sub
-	#tag EndEvent
-#tag EndEvents
 #tag ViewBehavior
 	#tag ViewProperty
 		Name="Name"
-		Visible=true
-		Group="ID"
-		InitialValue=""
-		Type="String"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="Interfaces"
 		Visible=true
 		Group="ID"
 		InitialValue=""
@@ -399,7 +279,7 @@ End
 		Name="Width"
 		Visible=true
 		Group="Size"
-		InitialValue="600"
+		InitialValue="300"
 		Type="Integer"
 		EditorType=""
 	#tag EndViewProperty
@@ -407,171 +287,127 @@ End
 		Name="Height"
 		Visible=true
 		Group="Size"
-		InitialValue="400"
+		InitialValue="300"
 		Type="Integer"
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="MinimumWidth"
-		Visible=true
-		Group="Size"
-		InitialValue="64"
-		Type="Integer"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="MinimumHeight"
-		Visible=true
-		Group="Size"
-		InitialValue="64"
-		Type="Integer"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="MaximumWidth"
-		Visible=true
-		Group="Size"
-		InitialValue="32000"
-		Type="Integer"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="MaximumHeight"
-		Visible=true
-		Group="Size"
-		InitialValue="32000"
-		Type="Integer"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="Type"
-		Visible=true
-		Group="Frame"
-		InitialValue="0"
-		Type="Types"
-		EditorType="Enum"
-		#tag EnumValues
-			"0 - Document"
-			"1 - Movable Modal"
-			"2 - Modal Dialog"
-			"3 - Floating Window"
-			"4 - Plain Box"
-			"5 - Shadowed Box"
-			"6 - Rounded Window"
-			"7 - Global Floating Window"
-			"8 - Sheet Window"
-			"9 - Metal Window"
-			"11 - Modeless Dialog"
-		#tag EndEnumValues
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="Title"
-		Visible=true
-		Group="Frame"
-		InitialValue="Untitled"
+		Name="InitialParent"
+		Visible=false
+		Group="Position"
+		InitialValue=""
 		Type="String"
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="HasCloseButton"
+		Name="Left"
 		Visible=true
-		Group="Frame"
-		InitialValue="True"
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="HasMaximizeButton"
-		Visible=true
-		Group="Frame"
-		InitialValue="True"
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="HasMinimizeButton"
-		Visible=true
-		Group="Frame"
-		InitialValue="True"
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="HasFullScreenButton"
-		Visible=true
-		Group="Frame"
-		InitialValue="False"
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="Resizeable"
-		Visible=true
-		Group="Frame"
-		InitialValue="True"
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="Composite"
-		Visible=false
-		Group="OS X (Carbon)"
-		InitialValue="False"
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="MacProcID"
-		Visible=false
-		Group="OS X (Carbon)"
+		Group="Position"
 		InitialValue="0"
 		Type="Integer"
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="FullScreen"
-		Visible=false
-		Group="Behavior"
-		InitialValue="False"
-		Type="Boolean"
+		Name="Top"
+		Visible=true
+		Group="Position"
+		InitialValue="0"
+		Type="Integer"
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="ImplicitInstance"
+		Name="LockLeft"
 		Visible=true
-		Group="Behavior"
+		Group="Position"
 		InitialValue="True"
 		Type="Boolean"
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="DefaultLocation"
+		Name="LockTop"
 		Visible=true
-		Group="Behavior"
+		Group="Position"
+		InitialValue="True"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="LockRight"
+		Visible=true
+		Group="Position"
+		InitialValue="False"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="LockBottom"
+		Visible=true
+		Group="Position"
+		InitialValue="False"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="TabIndex"
+		Visible=true
+		Group="Position"
 		InitialValue="0"
-		Type="Locations"
-		EditorType="Enum"
-		#tag EnumValues
-			"0 - Default"
-			"1 - Parent Window"
-			"2 - Main Screen"
-			"3 - Parent Window Screen"
-			"4 - Stagger"
-		#tag EndEnumValues
+		Type="Integer"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="TabPanelIndex"
+		Visible=false
+		Group="Position"
+		InitialValue="0"
+		Type="Integer"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="TabStop"
+		Visible=true
+		Group="Position"
+		InitialValue="True"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="AllowAutoDeactivate"
+		Visible=true
+		Group="Appearance"
+		InitialValue="True"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="Enabled"
+		Visible=true
+		Group="Appearance"
+		InitialValue="True"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="Tooltip"
+		Visible=true
+		Group="Appearance"
+		InitialValue=""
+		Type="String"
+		EditorType="MultiLineEditor"
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="AllowFocusRing"
+		Visible=true
+		Group="Appearance"
+		InitialValue="False"
+		Type="Boolean"
+		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="Visible"
 		Visible=true
-		Group="Behavior"
+		Group="Appearance"
 		InitialValue="True"
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="HasBackgroundColor"
-		Visible=true
-		Group="Background"
-		InitialValue="False"
 		Type="Boolean"
 		EditorType=""
 	#tag EndViewProperty
@@ -592,18 +428,50 @@ End
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="MenuBar"
+		Name="HasBackgroundColor"
 		Visible=true
-		Group="Menus"
-		InitialValue=""
-		Type="MenuBar"
+		Group="Background"
+		InitialValue="False"
+		Type="Boolean"
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="MenuBarVisible"
+		Name="AllowFocus"
 		Visible=true
-		Group="Deprecated"
+		Group="Behavior"
+		InitialValue="False"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="AllowTabs"
+		Visible=true
+		Group="Behavior"
 		InitialValue="True"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="EraseBackground"
+		Visible=false
+		Group="Behavior"
+		InitialValue="True"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="Transparent"
+		Visible=true
+		Group="Behavior"
+		InitialValue="True"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="DoubleBuffer"
+		Visible=true
+		Group="Windows Behavior"
+		InitialValue="False"
 		Type="Boolean"
 		EditorType=""
 	#tag EndViewProperty
