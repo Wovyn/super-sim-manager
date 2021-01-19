@@ -10,7 +10,7 @@ Begin Window winEditSims
    HasFullScreenButton=   False
    HasMaximizeButton=   False
    HasMinimizeButton=   False
-   Height          =   310
+   Height          =   330
    ImplicitInstance=   False
    MacProcID       =   0
    MaximumHeight   =   180
@@ -36,6 +36,7 @@ Begin Window winEditSims
       EraseBackground =   False
       HasBackgroundColor=   False
       Height          =   22
+      Index           =   -2147483648
       InitialParent   =   ""
       Left            =   255
       LockBottom      =   True
@@ -48,7 +49,7 @@ Begin Window winEditSims
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   268
+      Top             =   288
       Transparent     =   True
       Visible         =   True
       Width           =   173
@@ -65,6 +66,7 @@ Begin Window winEditSims
       EraseBackground =   True
       HasBackgroundColor=   False
       Height          =   109
+      Index           =   -2147483648
       InitialParent   =   ""
       Left            =   0
       LockBottom      =   False
@@ -117,7 +119,7 @@ Begin Window winEditSims
       Visible         =   True
       Width           =   408
    End
-   Begin ccFleetStatus ctlFleetStatus
+   Begin ccFleetStatusAccountSID ctlFleetStatus
       AllowAutoDeactivate=   True
       AllowFocus      =   False
       AllowFocusRing  =   False
@@ -128,7 +130,8 @@ Begin Window winEditSims
       Enabled         =   True
       EraseBackground =   True
       HasBackgroundColor=   False
-      Height          =   76
+      Height          =   110
+      Index           =   -2147483648
       InitialParent   =   ""
       Left            =   0
       LockBottom      =   False
@@ -141,7 +144,7 @@ Begin Window winEditSims
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   109
+      Top             =   110
       Transparent     =   True
       Visible         =   True
       Width           =   448
@@ -158,6 +161,7 @@ Begin Window winEditSims
       EraseBackground =   True
       HasBackgroundColor=   False
       Height          =   68
+      Index           =   -2147483648
       InitialParent   =   ""
       Left            =   0
       LockBottom      =   False
@@ -170,7 +174,7 @@ Begin Window winEditSims
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   184
+      Top             =   219
       Transparent     =   True
       Visible         =   True
       Width           =   448
@@ -190,6 +194,7 @@ End
 		  var tiCount as Integer = aroSims.Count
 		  if tiCount = 1 then
 		    ctlIndividual.LoadSim(aroSims(0))
+		    ctlFleetStatus.LoadSim(aroSims(0))
 		    ctlTimestamps.LoadSim(aroSims(0))
 		    
 		    // Padding for fields is in the container
@@ -204,14 +209,10 @@ End
 		    ctlIndividual.Close
 		    ctlTimestamps.Close
 		    
-		    // ctlIndividual.Enabled = false
-		    // ctlIndividual.Top = -9001
-		    // ctlIndividual.Visible = false
-		    // 
-		    // ctlTimestamps.Enabled = false
-		    // ctlTimestamps.Top = -9001
-		    // ctlTimestamps.Visible = false
+		    // Set multiple to popup menus
+		    ctlFleetStatus.LoadMultiple(aroSims)
 		    
+		    // Multiple header
 		    lblMultiple.Text = kMultipleSelected.Replace("%count%", aroSims.Count.ToString)
 		    lblMultiple.Top = 20
 		    

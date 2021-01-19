@@ -179,7 +179,7 @@ Begin ContainerControl ccIndividualName
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
-      FontName        =   "#App.kMonospacedFont"
+      FontName        =   "#kMonospacedFont"
       FontSize        =   0.0
       FontUnit        =   0
       Height          =   20
@@ -214,7 +214,7 @@ Begin ContainerControl ccIndividualName
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
-      FontName        =   "#App.kMonospacedFont"
+      FontName        =   "#kMonospacedFont"
       FontSize        =   0.0
       FontUnit        =   0
       Height          =   20

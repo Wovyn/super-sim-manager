@@ -1,5 +1,5 @@
 #tag Window
-Begin ContainerControl ccFleetStatus
+Begin ContainerControl ccFleetStatusAccountSID
    AllowAutoDeactivate=   True
    AllowFocus      =   False
    AllowFocusRing  =   False
@@ -10,7 +10,7 @@ Begin ContainerControl ccFleetStatus
    Enabled         =   True
    EraseBackground =   True
    HasBackgroundColor=   False
-   Height          =   76
+   Height          =   110
    InitialParent   =   ""
    Left            =   0
    LockBottom      =   False
@@ -47,7 +47,7 @@ Begin ContainerControl ccFleetStatus
       LockTop         =   True
       Scope           =   2
       SelectedRowIndex=   0
-      TabIndex        =   0
+      TabIndex        =   1
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
@@ -79,7 +79,7 @@ Begin ContainerControl ccFleetStatus
       Multiline       =   False
       Scope           =   2
       Selectable      =   False
-      TabIndex        =   1
+      TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "Fleet:"
@@ -121,7 +121,7 @@ Begin ContainerControl ccFleetStatus
       TextAlignment   =   3
       TextColor       =   &c00000000
       Tooltip         =   ""
-      Top             =   45
+      Top             =   46
       Transparent     =   False
       Underline       =   False
       Visible         =   True
@@ -139,7 +139,7 @@ Begin ContainerControl ccFleetStatus
       Height          =   20
       Index           =   -2147483648
       InitialParent   =   ""
-      InitialValue    =   "Ready\nActive\nInactive\nScheduled"
+      InitialValue    =   "Value"
       Italic          =   False
       Left            =   128
       LockBottom      =   False
@@ -157,7 +157,77 @@ Begin ContainerControl ccFleetStatus
       Transparent     =   False
       Underline       =   False
       Visible         =   True
-      Width           =   131
+      Width           =   120
+   End
+   Begin Label lblAccountSID
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Multiline       =   False
+      Scope           =   2
+      Selectable      =   False
+      TabIndex        =   4
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "Account SID:"
+      TextAlignment   =   3
+      TextColor       =   &c00000000
+      Tooltip         =   ""
+      Top             =   78
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   96
+   End
+   Begin Label lblAccountSIDValue
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      FontName        =   "#kMonospacedFont"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   128
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Multiline       =   False
+      Scope           =   2
+      Selectable      =   True
+      TabIndex        =   5
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "value"
+      TextAlignment   =   0
+      TextColor       =   &c00000000
+      Tooltip         =   ""
+      Top             =   78
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   300
    End
 End
 #tag EndWindow
@@ -183,6 +253,118 @@ End
 		  pmFleet.SelectedRowIndex = 0
 		  pmFleet.Enabled = true
 		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub LoadMultiple(aroSelection() as Twilio.Sim)
+		  const kMultipleSelected = "Multiple SIMs Selected"
+		  
+		  // Load default values
+		  LoadSim(aroSelection(0))
+		  
+		  pmFleet.AddRowAt(0, kMultipleSelected)
+		  pmFleet.AddRowAt(1, MenuItem.TextSeparator)
+		  pmFleet.SelectedRowIndex = 0
+		  
+		  pmStatus.RemoveAllRows
+		  
+		  pmStatus.AddRow(kMultipleSelected)
+		  pmStatus.AddRow(MenuItem.TextSeparator)
+		  
+		  pmStatus.AddRowAndTag(Twilio.Sim.Status.Ready.ToString, Twilio.Sim.Status.Ready)
+		  pmStatus.AddRowAndTag(Twilio.Sim.Status.Active.ToString, Twilio.Sim.Status.Active)
+		  pmStatus.AddRowAndTag(Twilio.Sim.Status.Inactive.ToString, Twilio.Sim.Status.Inactive)
+		  
+		  pmStatus.Width = 200
+		  pmStatus.SelectedRowIndex = 0
+		  
+		  // Remove Ready if selection contains something not new or ready
+		  for each toSim as Twilio.Sim in aroSelection
+		    if not (toSim.eStatus = Twilio.Sim.Status.NewState or toSim.eStatus = Twilio.Sim.Status.Ready) then
+		      pmStatus.RemoveRowAt(2)
+		      exit for toSim
+		      
+		    end
+		    
+		  next toSim
+		  
+		  // Set Account SID to multiple if necessary
+		  for each toSim as Twilio.Sim in aroSelection
+		    if aroSelection(0).sAccountSID <> toSim.sAccountSID then
+		      lblAccountSIDValue.Text = kMultipleSelected
+		      exit for toSim
+		      
+		    end
+		    
+		  next toSim
+		  
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub LoadSim(toSim as Twilio.Sim)
+		  // Load SIM to UI
+		  
+		  // Fleet
+		  for ti as Integer = 0 to (pmFleet.RowCount - 1)
+		    var toTag as Twilio.Fleet = pmFleet.RowTagAt(ti)
+		    if toTag = nil then continue for ti
+		    
+		    if toSim.oFleet <> nil and toTag.sSID = toSim.oFleet.sSID then
+		      pmFleet.SelectedRowIndex = ti
+		      exit for ti
+		      
+		    end
+		    
+		  next ti
+		  
+		  // Status
+		  LoadStatusByCurrent(toSim.eStatus)
+		  
+		  // Account SID
+		  lblAccountSIDValue.Text = toSim.sAccountSID
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub LoadStatusByCurrent(teCurrentStatus as Twilio.Sim.Status)
+		  // The status menu options differ by current state
+		  pmStatus.RemoveAllRows
+		  
+		  select case teCurrentStatus
+		  case Twilio.Sim.Status.NewState
+		    pmStatus.AddRowAndTag(Twilio.Sim.Status.NewState.ToString, Twilio.Sim.Status.NewState)
+		    pmStatus.AddRowAndTag(Twilio.Sim.Status.Ready.ToString, Twilio.Sim.Status.Ready)
+		    pmStatus.AddRowAndTag(Twilio.Sim.Status.Active.ToString, Twilio.Sim.Status.Active)
+		    
+		    pmStatus.SelectedRowIndex = 0
+		    
+		  case Twilio.Sim.Status.Ready
+		    pmStatus.AddRowAndTag(Twilio.Sim.Status.Ready.ToString, Twilio.Sim.Status.Ready)
+		    pmStatus.AddRowAndTag(Twilio.Sim.Status.Active.ToString, Twilio.Sim.Status.Active)
+		    
+		    pmStatus.SelectedRowIndex = 0
+		    
+		  case Twilio.Sim.Status.Active
+		    pmStatus.AddRowAndTag(Twilio.Sim.Status.Active.ToString, Twilio.Sim.Status.Active)
+		    pmStatus.AddRowAndTag(Twilio.Sim.Status.Inactive.ToString, Twilio.Sim.Status.Inactive)
+		    
+		    pmStatus.SelectedRowIndex = 0
+		    
+		  case Twilio.Sim.Status.Inactive
+		    pmStatus.AddRowAndTag(Twilio.Sim.Status.Active.ToString, Twilio.Sim.Status.Active)
+		    pmStatus.AddRowAndTag(Twilio.Sim.Status.Inactive.ToString, Twilio.Sim.Status.Inactive)
+		    
+		    pmStatus.SelectedRowIndex = 1
+		    
+		  case Twilio.Sim.Status.Scheduled
+		    pmStatus.AddRowAndTag(Twilio.Sim.Status.Scheduled.ToString, Twilio.Sim.Status.Scheduled)
+		    pmStatus.Enabled = false
+		    pmStatus.SelectedRowIndex = 0
+		    
+		  end select
 		End Sub
 	#tag EndMethod
 
