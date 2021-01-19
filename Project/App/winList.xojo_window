@@ -101,7 +101,7 @@ Begin Window winList
       AllowRowReordering=   False
       Bold            =   False
       ColumnCount     =   7
-      ColumnWidths    =   "*,*,60,0.8*,80,110,90"
+      ColumnWidths    =   "*,170,60,0.8*,80,110,150"
       DataField       =   ""
       DataSource      =   ""
       DefaultRowHeight=   22
@@ -483,7 +483,7 @@ End
 		    
 		    // Date created
 		    if toSim.dtmCreated <> nil then
-		      tarsRow.Add(toSim.dtmCreated.SQLDate)
+		      tarsRow.Add(toSim.dtmCreated.SQLDateTime)
 		      
 		    else
 		      tarsRow.Add("Unknown")
@@ -577,6 +577,11 @@ End
 	#tag Property, Flags = &h21
 		Private mbLoadedSims As Boolean
 	#tag EndProperty
+
+
+	#tag Constant, Name = kMonospacedFont, Type = String, Dynamic = False, Default = \"Courier New", Scope = Private
+		#Tag Instance, Platform = Mac OS, Language = Default, Definition  = \"Menlo"
+	#tag EndConstant
 
 
 #tag EndWindowCode
@@ -690,6 +695,18 @@ End
 		  
 		  SetEnabledState
 		End Sub
+	#tag EndEvent
+	#tag Event
+		Function CellTextPaint(g As Graphics, row As Integer, column As Integer, x as Integer, y as Integer) As Boolean
+		  #pragma unused row
+		  #pragma unused x
+		  #pragma unused y
+		  
+		  if column = 1 or column = 6 then
+		    g.FontName = kMonospacedFont
+		    
+		  end
+		End Function
 	#tag EndEvent
 #tag EndEvents
 #tag Events chkAll
