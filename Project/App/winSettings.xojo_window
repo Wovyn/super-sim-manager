@@ -372,6 +372,8 @@ End
 		Sub CredentialResponse(tbAuthenticated as Boolean, tsError as String)
 		  if tbAuthenticated then
 		    // Good to go
+		    App.SaveSettings
+		    
 		    winList.Show
 		    winList.LoadClient
 		    

@@ -3,20 +3,7 @@ Protected Class App
 Inherits Application
 	#tag Event
 		Function CancelClose() As Boolean
-		  try
-		    // Save the settings
-		    var tsSettings as String = GenerateJSON(Settings)
-		    
-		    var tfSettings as FolderItem = DataFolder.Child("settings.json")
-		    var tos as TextOutputStream = TextOutputStream.Create(tfSettings)
-		    
-		    tos.Write(tsSettings)
-		    tos.Close
-		    
-		  catch ex as IOException
-		    // Something has gone awry but we can't really recover from it
-		    
-		  end try
+		  SaveSettings
 		End Function
 	#tag EndEvent
 
@@ -111,6 +98,25 @@ Inherits Application
 		  
 		  return mfDataFolder
 		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub SaveSettings()
+		  try
+		    // Save the settings
+		    var tsSettings as String = GenerateJSON(Settings)
+		    
+		    var tfSettings as FolderItem = DataFolder.Child("settings.json")
+		    var tos as TextOutputStream = TextOutputStream.Create(tfSettings)
+		    
+		    tos.Write(tsSettings)
+		    tos.Close
+		    
+		  catch ex as IOException
+		    // Something has gone awry but we can't really recover from it
+		    
+		  end try
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
