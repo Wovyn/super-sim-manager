@@ -246,11 +246,11 @@ Begin Window winList
       InitialParent   =   ""
       Italic          =   False
       Left            =   254
-      LockBottom      =   False
+      LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
+      LockRight       =   True
+      LockTop         =   False
       Multiline       =   False
       Scope           =   2
       Selectable      =   False
