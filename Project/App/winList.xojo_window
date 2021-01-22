@@ -580,8 +580,15 @@ End
 		  btnEdit.Caption = if(tiSelectedCount = 1, kEditSim, kEditSims)
 		  
 		  // Set states based on selection
-		  btnEdit.Enabled = true
-		  lblSelected.Text = tiSelectedCount.ToString + " / " + lbSims.RowCount.ToString + " Selected"
+		  if tiSelectedCount < 1 then
+		    btnEdit.Enabled = true
+		    lblSelected.Text = lbSims.RowCount.ToString + " SIMs"
+		    
+		  else
+		    btnEdit.Enabled = true
+		    lblSelected.Text = tiSelectedCount.ToString + " / " + lbSims.RowCount.ToString + " Selected"
+		    
+		  end
 		End Sub
 	#tag EndMethod
 
