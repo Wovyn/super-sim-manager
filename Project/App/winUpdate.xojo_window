@@ -213,6 +213,7 @@ End
 		  call tmd.ShowModal
 		  
 		  // Stop and close
+		  mbStop = true
 		  self.Close
 		End Sub
 	#tag EndEvent
@@ -221,6 +222,20 @@ End
 		  #pragma unused toSim
 		  
 		  HandleQueue
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub ServerResponse(toErr as Twilio.RequestError)
+		  // Eep
+		  var tmd as new MessageDialog
+		  tmd.Message = "Unexpected Server Response"
+		  tmd.Explanation = toErr.Message
+		  
+		  call tmd.ShowModal
+		  
+		  // Stop and close
+		  mbStop = true
+		  self.Close
 		End Sub
 	#tag EndEvent
 #tag EndEvents

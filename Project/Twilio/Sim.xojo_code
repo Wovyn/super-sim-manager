@@ -99,7 +99,7 @@ Protected Class Sim
 		  
 		  // Fleet
 		  if me.oFleet <> nil and me.oFleet.sSID <> tsOriginalFleet then
-		    tdictUpdate.Value("Fleet") = me.oFleet.sSID.Encoding
+		    tdictUpdate.Value("Fleet") = me.oFleet.sSID
 		    
 		  end
 		  

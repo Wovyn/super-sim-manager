@@ -12,7 +12,7 @@ Inherits URLConnection
 		    var tdictResponse as Dictionary = ParseJSON(tsContent)
 		    
 		    // Server responded
-		    if HTTPStatus = 200 then
+		    if HTTPStatus = 200 or HTTPStatus = 202 then
 		      RaiseEvent Completed(tdictResponse)
 		      return
 		      
