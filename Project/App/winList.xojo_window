@@ -439,6 +439,7 @@ End
 		  
 		  // Retain selections
 		  var tarsSelectedSids() as String
+		  var tiScrollPosition as Integer = lbSims.ScrollPosition
 		  for ti as Integer = (lbSims.RowCount - 1) downto 0
 		    if lbSims.CellCheckBoxValueAt(ti, 0) = true then
 		      var toTag as Twilio.Sim = lbSims.RowTagAt(ti)
@@ -562,6 +563,9 @@ End
 		    end
 		    
 		  next toSim
+		  
+		  // Restore position
+		  lbSims.ScrollPosition = tiScrollPosition
 		  
 		  SyncCheckAllState
 		  SetEnabledState
