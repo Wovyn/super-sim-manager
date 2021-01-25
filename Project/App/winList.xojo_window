@@ -827,6 +827,8 @@ End
 		  lbSims.Enabled = true
 		  
 		  SetEnabledState
+		  
+		  lbSims.SetFocus
 		End Sub
 	#tag EndEvent
 #tag EndEvents
