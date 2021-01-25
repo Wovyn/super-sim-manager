@@ -355,14 +355,6 @@ End
 		    // Not modal to allow async responses
 		    toUpdate.ShowWithin(self)
 		    
-		  else
-		    // Nothing to update
-		    var tmd as new MessageDialog
-		    tmd.Message = "Nothing To Update"
-		    tmd.Explanation = "No changes to update, complete."
-		    
-		    call tmd.ShowModal
-		    
 		  end
 		End Sub
 	#tag EndMethod

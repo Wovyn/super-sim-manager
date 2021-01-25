@@ -277,6 +277,16 @@ End
 		    end
 		    
 		  next toSim
+		  
+		  // Nothing to update, inform user
+		  if aroUpdates.LastIndex < 0 then
+		    var tmd as new MessageDialog
+		    tmd.Message = "Nothing To Update"
+		    tmd.Explanation = "No changes to update, complete."
+		    
+		    call tmd.ShowModal
+		    
+		  end
 		End Sub
 	#tag EndMethod
 
