@@ -35,11 +35,11 @@ Protected Class Client
 	#tag Method, Flags = &h21
 		Private Sub CleanupRequests()
 		  // Iterate backwards as to not disturb the array
-		  for ti as Integer = maroRequests.LastRowIndex downto 0
+		  for ti as Integer = maroRequests.LastIndex downto 0
 		    if maroRequests(ti).bDone then
 		      // Request is complete, destroy
 		      maroRequests(ti) = nil
-		      maroRequests.Remove(ti)
+		      maroRequests.RemoveAt(ti)
 		      
 		    end
 		    
@@ -49,10 +49,8 @@ Protected Class Client
 
 	#tag Method, Flags = &h21
 		Private Sub FleetsResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
-		  #pragma unused toSender
-		  
 		  // Gather the Sim resources
-		  aroFleets.ResizeTo(-1)
+		  #pragma unused toSender
 		  
 		  if tdictResponse.HasKey("fleets") then
 		    var tardictFleets() as Object = tdictResponse.Value("fleets")
@@ -69,8 +67,22 @@ Protected Class Client
 		    
 		  end
 		  
-		  // Make the list available
-		  RaiseEvent FleetListComplete
+		  // Check for next page
+		  if tdictResponse.HasKey("meta") then
+		    var tdictMeta as Dictionary = tdictResponse.Value("meta")
+		    var tvNextPage as Variant = tdictMeta.Lookup("next_page_url", nil)
+		    
+		    if tvNextPage = nil then
+		      // No more pages, complete!
+		      RaiseEvent FleetListComplete
+		      
+		    else
+		      // Process the next page
+		      ListFleets(tvNextPage.StringValue)
+		      
+		    end
+		    
+		  end
 		  
 		  // Cleanup sockets
 		  SocketComplete(toSender)
@@ -97,7 +109,7 @@ Protected Class Client
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub ListFleets()
+		Sub ListFleets(tsNextPage as String = "")
 		  // Asynchronous event to fetch all Fleet resources
 		  var toReq as NetRequest = NewRequest
 		  
@@ -105,12 +117,21 @@ Protected Class Client
 		  AddHandler toReq.Completed, WeakAddressOf FleetsResponse
 		  
 		  // Request async
-		  toReq.Send("GET", "https://supersim.twilio.com/v1/Fleets")
+		  if tsNextPage = "" then
+		    // Initial request
+		    aroFleets.ResizeTo(-1)
+		    toReq.Send("GET", "https://supersim.twilio.com/v1/Fleets?PageSize=" + kPageSize.ToString)
+		    
+		  else
+		    // Subsequent page request
+		    toReq.Send("GET", tsNextPage)
+		    
+		  end
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub ListProfiles()
+		Sub ListProfiles(tsNextPage as String = "")
 		  // Asynchronous event to fetch all Sim resources
 		  var toReq as NetRequest = NewRequest
 		  
@@ -118,12 +139,21 @@ Protected Class Client
 		  AddHandler toReq.Completed, WeakAddressOf ProfilesResponse
 		  
 		  // Request async
-		  toReq.Send("GET", "https://supersim.twilio.com/v1/NetworkAccessProfiles")
+		  if tsNextPage = "" then
+		    // Initial request
+		    aroProfiles.ResizeTo(-1)
+		    toReq.Send("GET", "https://supersim.twilio.com/v1/NetworkAccessProfiles?PageSize=" + kPageSize.ToString)
+		    
+		  else
+		    // Subsequent page request
+		    toReq.Send("GET", tsNextPage)
+		    
+		  end
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub ListSims()
+		Sub ListSims(tsNextPage as String = "")
 		  // Asynchronous event to fetch all Sim resources
 		  var toReq as NetRequest = NewRequest
 		  
@@ -131,7 +161,16 @@ Protected Class Client
 		  AddHandler toReq.Completed, WeakAddressOf SimsResponse
 		  
 		  // Request async
-		  toReq.Send("GET", "https://supersim.twilio.com/v1/Sims")
+		  if tsNextPage = "" then
+		    // Initial request
+		    aroSims.ResizeTo(-1)
+		    toReq.Send("GET", "https://supersim.twilio.com/v1/Sims?PageSize=" + kPageSize.ToString)
+		    
+		  else
+		    // Subsequent page request
+		    toReq.Send("GET", tsNextPage)
+		    
+		  end
 		End Sub
 	#tag EndMethod
 
@@ -156,10 +195,8 @@ Protected Class Client
 
 	#tag Method, Flags = &h21
 		Private Sub ProfilesResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
+		  // Gather the Profiles
 		  #pragma unused toSender
-		  
-		  // Gather the Sim resources
-		  aroProfiles.ResizeTo(-1)
 		  
 		  if tdictResponse.HasKey("network_access_profiles") then
 		    var tardictProfiles() as Object = tdictResponse.Value("network_access_profiles")
@@ -176,8 +213,22 @@ Protected Class Client
 		    
 		  end
 		  
-		  // Make the list available
-		  RaiseEvent ProfileListComplete
+		  // Check for next page
+		  if tdictResponse.HasKey("meta") then
+		    var tdictMeta as Dictionary = tdictResponse.Value("meta")
+		    var tvNextPage as Variant = tdictMeta.Lookup("next_page_url", nil)
+		    
+		    if tvNextPage = nil then
+		      // No more pages, complete!
+		      RaiseEvent ProfileListComplete
+		      
+		    else
+		      // Process the next page
+		      ListProfiles(tvNextPage.StringValue)
+		      
+		    end
+		    
+		  end
 		  
 		  // Cleanup sockets
 		  SocketComplete(toSender)
@@ -186,10 +237,8 @@ Protected Class Client
 
 	#tag Method, Flags = &h21
 		Private Sub SimsResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
-		  #pragma unused toSender
-		  
 		  // Gather the Sim resources
-		  aroSims.ResizeTo(-1)
+		  #pragma unused toSender
 		  
 		  if tdictResponse.HasKey("sims") then
 		    var tardictSims() as Object = tdictResponse.Value("sims")
@@ -206,8 +255,22 @@ Protected Class Client
 		    
 		  end
 		  
-		  // Make the list available
-		  RaiseEvent SimListComplete
+		  // Check for next page
+		  if tdictResponse.HasKey("meta") then
+		    var tdictMeta as Dictionary = tdictResponse.Value("meta")
+		    var tvNextPage as Variant = tdictMeta.Lookup("next_page_url", nil)
+		    
+		    if tvNextPage = nil then
+		      // No more pages, complete!
+		      RaiseEvent SimListComplete
+		      
+		    else
+		      // Process the next page
+		      ListSims(tvNextPage.StringValue)
+		      
+		    end
+		    
+		  end
 		  
 		  // Cleanup sockets
 		  SocketComplete(toSender)

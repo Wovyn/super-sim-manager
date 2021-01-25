@@ -1,5 +1,9 @@
 #tag Module
 Protected Module Twilio
+	#tag Constant, Name = kPageSize, Type = Double, Dynamic = False, Default = \"250", Scope = Private
+	#tag EndConstant
+
+
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Name"
