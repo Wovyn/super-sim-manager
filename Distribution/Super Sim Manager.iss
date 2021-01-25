@@ -4,7 +4,7 @@
 #define MyAppName "Super Sim Manager"
 #define MyAppExeName "Super Sim Manager.exe"
 #define MyAppVersion "1.0.4"
-#define MyAppPublisher "Wovyn"
+#define MyAppPublisher "Wovyn L.L.C."
 #define MyCopyrightString "© 2021, Wovyn L.L.C."
 #define MyAppURL "https://github.com/Wovyn/super-sim-manager"
 
