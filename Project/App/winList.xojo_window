@@ -346,6 +346,7 @@ End
 		  if toEdit.aroUpdates.LastIndex > -1 then
 		    var toUpdate as new winUpdate
 		    toUpdate.aroUpdateSims = toEdit.aroUpdates
+		    toUpdate.Prepare
 		    
 		    // Set credentials
 		    toUpdate.oClient.sSID   = me.oClient.sSID
