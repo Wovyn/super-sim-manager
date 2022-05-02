@@ -194,10 +194,10 @@ End
 		  //      remove the simSid from the readRequestSimSIDs
 		  
 		  selectedSimSIDs = simSids
-		  readRequestSimSIDs = simSids
+		  readRequestSimSIDs = selectedSimSIDs
 		  
 		  System.DebugLog("winSmsCommands selected sims count: " + selectedSimSIDs.Count.ToString)
-		  LoadSmsCommands()
+		  LoadSmsCommands
 		  
 		End Sub
 	#tag EndMethod
@@ -243,7 +243,7 @@ End
 #tag Events btnReload
 	#tag Event
 		Sub Action()
-		  System.DebugLog("winSmsCommands btnReload clicked.")
+		  System.DebugLog("winSmsCommands btnReload clicked. selectedSimSIDs count: " + selectedSimSIDs.Count.ToString)
 		  //disable reload button
 		  me.Enabled = false
 		  // Reload Client
