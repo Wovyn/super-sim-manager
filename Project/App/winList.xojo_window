@@ -763,14 +763,6 @@ End
 	#tag EndProperty
 	
 	#tag Property, Flags = &h21
-		Private selectedSimSIDsList() As String
-	#tag EndProperty
-	
-	#tag Property, Flags = &h21
-		Private processedSelectedSimSIDs() As String
-	#tag EndProperty
-	
-	#tag Property, Flags = &h21
 		Private mbLoadedSmsCommands As Boolean
 	#tag EndProperty
 

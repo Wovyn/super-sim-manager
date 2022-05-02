@@ -177,7 +177,13 @@ Protected Class Client
 	#tag Method, Flags = &h0
 		Sub FetchSMSCommands(tsNextPage as String = "", simSid as String="")
 		
-		  System.DebugLog("FetchSMSCommands fetching SMS commands for: " + simSid)
+		  if( tsNextPage = "" ) then
+		    // first request for simSid
+		    System.DebugLog("FetchSMSCommands fetching SMS commands for: " + simSid)
+		    smsCommandsFetchCurrentSimSid = simSid
+		  else
+		    System.DebugLog("FetchSMSCommands fetching SMS commands for: " + tsNextPage)
+		  end
 		  // Asynchronous event to fetch all Sim resources
 		  var toReq as NetRequest = NewRequest
 		  
@@ -305,33 +311,47 @@ Protected Class Client
 	
 	#tag Method, Flags = &h21
 		Private Sub SimFetchSMSCommandsResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
-		  // Gather the Sim resources
+		  // Gather the Sms command resources
 		  #pragma unused toSender
 		  
-		  var tardictSmsCommands() as Object
+		  System.DebugLog("SimFetchSMSCommandsResponse called." )
+		  
 		  if tdictResponse.HasKey("sms_commands") then
-		    tardictSmsCommands = tdictResponse.Value("sms_commands")
+		  	
+		  	System.DebugLog("SimFetchSMSCommandsResponse sms_commands found on response." )
+		    var tardictSmsCommands() as Object = tdictResponse.Value("sms_commands")
 		    
-		    for each tdictSmsCommand as Object in tardictSmsCommands
-		      if tdictSmsCommand isa Dictionary then
-		        var toSmsCommand as new Twilio.SmsCommand(Dictionary(tdictSmsCommand))
-		        smsCommands.Add(toSmsCommand)
-		        
-		      end
-		      
-		    next tdictSmsCommand
+		    if( tardictSmsCommands.Count > 0 ) then
+			    System.DebugLog("SimFetchSMSCommandsResponse sms_commands IS NOT Empty")
+			    
+			    for each tdictSmsCommand as Object in tardictSmsCommands
+			      if tdictSmsCommand isa Dictionary then
+			        System.DebugLog("SimFetchSMSCommandsResponse sms_commands is a dictionary." )
+			        var toSmsCommand as new Twilio.SmsCommand(Dictionary(tdictSmsCommand))
+			        smsCommands.Add(toSmsCommand)
+			        System.DebugLog("SimFetchSMSCommandsResponse sms_commands sid: " + toSmsCommand.sID )
+			      else
+			        System.DebugLog("SimFetchSMSCommandsResponse sms_commands is NOT a dictionary." )  
+			      end
+			      
+			    next tdictSmsCommand
+		    else
+		    	System.DebugLog("SimFetchSMSCommandsResponse sms_commands IS Empty")
+		    end
 		    
 		  end
 		  
 		  // Check for next page
 		  if tdictResponse.HasKey("meta") then
+		  	
+		  	System.DebugLog("SimFetchSMSCommandsResponse tdictResponse has meta")
+		  	
 		    var tdictMeta as Dictionary = tdictResponse.Value("meta")
 		    var tvNextPage as Variant = tdictMeta.Lookup("next_page_url", nil)
 		    
 		    if tvNextPage = nil then
-		      // No more pages, complete!
-		      var simSID as String = smsCommands(0).simSID
-		      RaiseEvent SimFetchSMSCommandsComplete(simSID) //sim_sid
+		      // No more pages, complete!		      
+		        RaiseEvent SimFetchSMSCommandsComplete(smsCommandsFetchCurrentSimSid) //sim_sid		      
 		      
 		    else
 		      // Process the next page
@@ -498,6 +518,11 @@ Protected Class Client
 	#tag Property, Flags = &h0
 		smsCommands() As Twilio.SmsCommand
 	#tag EndProperty
+	
+	#tag Property, Flags = &h0
+		smsCommandsFetchCurrentSimSid As String
+	#tag EndProperty
+	
 
 	#tag Property, Flags = &h21
 		Private maroRequests() As NetRequest

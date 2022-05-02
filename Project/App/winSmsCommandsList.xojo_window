@@ -179,6 +179,7 @@ End
 		
 		  System.DebugLog("winSmsCommands Load called.")
 		  
+		  simsSmsCommandsList.ResizeTo(-1)
 		  oClient.smsCommands.ResizeTo(-1)
 		  oClient.sSID   = App.Settings.Lookup("TwilioAuthSID", "").StringValue
 		  oClient.sToken = App.Settings.Lookup("TwilioAuthToken", "").StringValue
@@ -220,13 +221,16 @@ End
 		  //      if there is an error and it can be retried add the oClient request error event will call the function that
 		  //         will add the sim sid back to the readRequestSimSIDs and retry the request?
 		  
-		  if readRequestSimSIDs.Count < 1 then return
+		  if readRequestSimSIDs.Count < 1 then
+		    System.DebugLog("winSmsCommands LoadSmsCommands: All readRequestSimSIDs has been processed.")
+		    return
+		  end
 		  
 		  var simSid as String = readRequestSimSIDs(0)
 		  System.DebugLog("winSmsCommands LoadSmsCommands called for sim sid: " + simSid)
 		  readRequestSimSIDs.RemoveAt(0)
 		  oClient.FetchSMSCommands("", simSid)
-		  System.DebugLog("winSmsCommands LoadSmsCommands: after calling oClient.FetchSMSCommands")
+		  //System.DebugLog("winSmsCommands LoadSmsCommands: after calling oClient.FetchSMSCommands")
 		  
 		End Sub
 	#tag EndMethod
@@ -239,9 +243,16 @@ End
 #tag Events btnReload
 	#tag Event
 		Sub Action()
+		  System.DebugLog("winSmsCommands btnReload clicked.")
 		  //disable reload button
 		  me.Enabled = false
 		  // Reload Client
+		  
+		  simsSmsCommandsList.ResizeTo(-1)
+		  oClient.smsCommands.ResizeTo(-1)
+		  oClient.sSID   = App.Settings.Lookup("TwilioAuthSID", "").StringValue
+		  oClient.sToken = App.Settings.Lookup("TwilioAuthToken", "").StringValue
+		  
 		  readRequestSimSIDs = selectedSimSIDs
 		  LoadSmsCommands
 		End Sub
@@ -252,7 +263,7 @@ End
 	#tag Event
 		Sub SimFetchSMSCommandsComplete(simSID as String)
 		  // event listener for Twilio.SimFetchSMSCommandsComplete event
-		  System.DebugLog("SimFetchSMSCommandsComplete for sim '" + simSID + "' called." )
+		  System.DebugLog("SimFetchSMSCommandsComplete called for sim '" + simSID + "'." )
 		  // add to processedSelectedSimSIDs
 		  
 		  // me.smsCommands contains the sim's sms commands	   
