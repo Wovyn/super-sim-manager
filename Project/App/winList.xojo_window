@@ -435,32 +435,34 @@ End
 	
 	#tag Method, Flags = &h21
 		Private Sub ViewSMS()
+		  
+		  // get selected sims sids 
+		  // the selected sim sids are stored in the winSmsCommandsList variable selectedSimSIDs and readRequestSimSIDs
+		  // open winsmscommand window
+		  // winsmscommand window fetches the smscommands for each sim sid
+		  //   the spinner spins until all sms commands are fetched
+		  //   how:
+		  //      loop each sim sid and send a read sms command request to twilio until the readRequestSimSIDs is empty
+		  //      add all the sms commands from the response to the simsSmsCommandsList of the winSmsCommandList window
+		  //      remove the simSid from the readRequestSimSIDs
+		  
 		  System.DebugLog(  "ViewSMS called." )
 		  var taroSelection() as Twilio.Sim = GetSelection
 		  
-		  oClient.aroSmsCommands.ResizeTo(-1)
 		  // No selection
 		  if taroSelection.Count < 1 then return
 		  
+		  var simSIDs() as String
 		  For Each sim As Twilio.Sim In taroSelection
-			  System.DebugLog("Selected Sim: " + sim.sUniqueName)
+			  System.DebugLog("Selected Sim sSID: " + sim.sSID)
 			  // https://www.twilio.com/docs/iot/supersim/api/smscommand-resource#read-multiple-smscommand-resources
-			  // smsCommands(sSID)
+			  simSIDs.add(sim.sSID)
 			  
-			  
-		  Next
+		  Next sim
 		  
 		  var toView as new winSmsCommandsList
-		  //oClient.FetchSMSCommands("",sim.sSID)
+		  toView.Load(simSIDs)// initialize variables		  
 		  toView.ShowModalWithin(self)
-		  
-		End Sub
-	#tag EndMethod
-	
-	#tag Method, Flags = &h21
-		Private Sub FetchSmsCommands(simSIDs() as String)
-		  System.DebugLog(  "ViewSMS called." )
-		 
 		  
 		End Sub
 	#tag EndMethod
@@ -761,7 +763,11 @@ End
 	#tag EndProperty
 	
 	#tag Property, Flags = &h21
-		Private smsCommandsList As Twilio.SmsCommand
+		Private selectedSimSIDsList() As String
+	#tag EndProperty
+	
+	#tag Property, Flags = &h21
+		Private processedSelectedSimSIDs() As String
 	#tag EndProperty
 	
 	#tag Property, Flags = &h21
@@ -785,38 +791,6 @@ End
 #tag EndWindowCode
 
 #tag Events oClient
-	#tag Event
-		Sub SimFetchSMSCommandsComplete()
-		
-		  System.DebugLog("SimFetchSMSCommandsComplete called." )
-		  // Sort the Sims by name
-		  var tarsDateCreated() as String
-		  for each toSmsCommand as Twilio.SmsCommand in me.aroSmsCommands
-		    tarsDateCreated.Add(toSmsCommand.dateCreated)
-		    
-		  next toSmsCommand
-		  
-		  tarsDateCreated.SortWith(me.aroSmsCommands)
-		  
-		  // Check if ready to merge data
-		  mbLoadedSmsCommands = true
-		  //HandleLoadResponse
-		  
-		  	// Reload list
-		    // ReloadList
-		    
-		    // show modal with SMS commands table
-		   
-		  
-		    var toView as new winSmsCommandsList
-		    toView.aroSmsCommands = me.aroSmsCommands
-		    //toView.Load(oClient)// for reloading
-		  
-		  // Re-enable UI
-		  // btnReload.Enabled = true
-		  pwWait.Visible = false
-		End Sub
-	#tag EndEvent
 	#tag Event
 		Sub SimListComplete()
 		  // Sort the Sims by name

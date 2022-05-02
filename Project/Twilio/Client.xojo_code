@@ -175,7 +175,9 @@ Protected Class Client
 	#tag EndMethod	
 	
 	#tag Method, Flags = &h0
-		Sub FetchSMSCommands(tsNextPage as String = "", sSID as String = "")
+		Sub FetchSMSCommands(tsNextPage as String = "", simSid as String="")
+		
+		  System.DebugLog("FetchSMSCommands fetching SMS commands for: " + simSid)
 		  // Asynchronous event to fetch all Sim resources
 		  var toReq as NetRequest = NewRequest
 		  
@@ -185,8 +187,10 @@ Protected Class Client
 		  // Request async
 		  if tsNextPage = "" then
 		    // Initial request
-		    //aroSmsCommands.ResizeTo(-1)
-		    toReq.Send("GET", "https://supersim.twilio.com/v1/SmsCommands/" + sSID + "?PageSize=" + kPageSize.ToString)
+		    smsCommands.ResizeTo(-1)
+		    System.DebugLog("FetchSMSCommands: sending request to twilio..")
+		    //https://www.twilio.com/docs/iot/supersim/api/smscommand-resource#read-multiple-smscommand-resources
+		    toReq.Send("GET", "https://supersim.twilio.com/v1/SmsCommands?Sim=" + simSid + "&PageSize=" + kPageSize.ToString+"&Direction=from_sim")
 		    
 		  else
 		    // Subsequent page request
@@ -304,13 +308,14 @@ Protected Class Client
 		  // Gather the Sim resources
 		  #pragma unused toSender
 		  
+		  var tardictSmsCommands() as Object
 		  if tdictResponse.HasKey("sms_commands") then
-		    var tardictSmsCommands() as Object = tdictResponse.Value("sms_commands")
+		    tardictSmsCommands = tdictResponse.Value("sms_commands")
 		    
 		    for each tdictSmsCommand as Object in tardictSmsCommands
 		      if tdictSmsCommand isa Dictionary then
 		        var toSmsCommand as new Twilio.SmsCommand(Dictionary(tdictSmsCommand))
-		        aroSmsCommands.Add(toSmsCommand)
+		        smsCommands.Add(toSmsCommand)
 		        
 		      end
 		      
@@ -325,7 +330,8 @@ Protected Class Client
 		    
 		    if tvNextPage = nil then
 		      // No more pages, complete!
-		      RaiseEvent SimFetchSMSCommandsComplete
+		      var simSID as String = smsCommands(0).simSID
+		      RaiseEvent SimFetchSMSCommandsComplete(simSID) //sim_sid
 		      
 		    else
 		      // Process the next page
@@ -469,7 +475,7 @@ Protected Class Client
 	#tag EndHook
 	
 	#tag Hook, Flags = &h0
-		Event SimFetchSMSCommandsComplete()
+		Event SimFetchSMSCommandsComplete(simSID as String)
 	#tag EndHook
 
 	#tag Hook, Flags = &h0
@@ -490,7 +496,7 @@ Protected Class Client
 	#tag EndProperty
 	
 	#tag Property, Flags = &h0
-		aroSmsCommands() As Twilio.SmsCommand
+		smsCommands() As Twilio.SmsCommand
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
