@@ -34,6 +34,7 @@ Protected Class SmsCommand
 		    
 		    // Parse status
 		    eStatus = StatusFromString(tdictItem.Lookup("status", ""))
+		    status = tdictItem.Lookup("status", "")
 		    
 		  end
 		  
@@ -43,22 +44,22 @@ Protected Class SmsCommand
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function StatusFromString(tsInput as String) As Twilio.SmsCommand.Status
+		Shared Function StatusFromString(tsInput as String) As Twilio.SmsCommand.statusIndex
 		  select case tsInput
 		  case "queued"
-		    return Status.Queued
+		    return statusIndex.Queued
 		    
 		  case "sent"
-		    return Status.Sent
+		    return statusIndex.Sent
 		    
 		  case "delivered"
-		    return Status.Delivered
+		    return statusIndex.Delivered
 		    
 		  case "received"
-		    return Status.Received
+		    return statusIndex.Received
 		    
 		  case "failed"
-		    return Status.Failed
+		    return statusIndex.Failed
 		    
 		  case else
 		    var ex as new UnsupportedFormatException
@@ -90,7 +91,7 @@ Protected Class SmsCommand
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		eStatus As Twilio.SmsCommand.Status
+		eStatus As Twilio.SmsCommand.statusIndex
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -128,8 +129,12 @@ Protected Class SmsCommand
 	#tag Property, Flags = &h0
 		url As String
 	#tag EndProperty
+	
+	#tag Property, Flags = &h0
+		status As String
+	#tag EndProperty
 
-	#tag Enum, Name = Status, Type = Integer, Flags = &h0
+	#tag Enum, Name = StatusIndex, Type = Integer, Flags = &h0
 		Unknown
 		  Queued
 		  Sent
@@ -137,8 +142,7 @@ Protected Class SmsCommand
 		  Received
 		  Failed
 	#tag EndEnum
-
-
+	
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Name"
