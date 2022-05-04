@@ -13,17 +13,17 @@ Begin Window winSmsCommandsList
 	Height			 =	428
 	ImplicitInstance=	False
 	MacProcID		 =	0
-	MaximumHeight	=	180
-	MaximumWidth	 =	3200
+	MaximumHeight	=	32000
+	MaximumWidth	 =	32000
 	MenuBar			=	0
 	MenuBarVisible	=	True
 	MinimumHeight	=	180
-	MinimumWidth	 =	448
-	Resizeable		=	False
+	MinimumWidth	 =	800
+	Resizeable		=	True
 	Title				=	"View Sms Commands"
 	Type				=	8
 	Visible			=	False
-	Width				=	814
+	Width				=	1024
 	Begin Twilio.Client oClient
 		Index				=	-2147483648
 		LockedInPosition=	False
@@ -46,7 +46,7 @@ Begin Window winSmsCommandsList
 		Index				=	-2147483648
 		InitialParent	=	""
 		Italic			 =	False
-		Left				=	686
+		Left				=	898
 		LockBottom		=	True
 		LockedInPosition=	False
 		LockLeft			=	False
@@ -112,7 +112,7 @@ Begin Window winSmsCommandsList
 		Transparent		=	False
 		Underline		 =	False
 		Visible			=	True
-		Width				=	738
+		Width				=	950
 		_ScrollOffset	=	0
 		_ScrollWidth	 =	-1
 	End
@@ -122,7 +122,7 @@ Begin Window winSmsCommandsList
 		Height			 =	17
 		Index				=	-2147483648
 		InitialParent	=	""
-		Left				=	658
+		Left				=	870
 		LockBottom		=	True
 		LockedInPosition=	False
 		LockLeft			=	False
@@ -179,6 +179,7 @@ End
 		
 			System.DebugLog("winSmsCommands Load called.")
 			
+			pwWait.Visible = true
 			simsSmsCommandsList.ResizeTo(-1)
 			oClient.smsCommands.ResizeTo(-1)
 			oClient.sSID	= App.Settings.Lookup("TwilioAuthSID", "").StringValue
@@ -211,6 +212,7 @@ End
 		Private Sub FetchSmsCommands()
 			
 			System.DebugLog("winSmsCommands FetchSmsCommands called.")
+			
 			// Reset load flags
 			mbAuthenticationFailed = false
 			// fetch the smscommands for each sim sid on
@@ -290,6 +292,7 @@ End
 		Sub Action()
 			System.DebugLog("winSmsCommands btnReload clicked. selectedSimSIDs count: " + selectedSimSIDs.Count.ToString)
 			//disable reload button
+			pwWait.Visible = true
 			me.Enabled = false
 			// Reload Client
 			

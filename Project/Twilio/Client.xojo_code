@@ -196,7 +196,10 @@ Protected Class Client
 		    smsCommands.ResizeTo(-1)
 		    System.DebugLog("FetchSMSCommands: sending request to twilio..")
 		    //https://www.twilio.com/docs/iot/supersim/api/smscommand-resource#read-multiple-smscommand-resources
-		    toReq.Send("GET", "https://supersim.twilio.com/v1/SmsCommands?Sim=" + simSid + "&PageSize=" + kPageSize.ToString+"&Direction=from_sim")
+		    
+		    var url as String = "https://supersim.twilio.com/v1/SmsCommands?Sim=" + simSid + "&PageSize=" + kPageSize.ToString+"&Direction=from_sim"
+		    //url = "http://127.0.0.1:8000/api/twilio/mocksmscommands_server"
+		    toReq.Send("GET", url)
 		    
 		  else
 		    // Subsequent page request
