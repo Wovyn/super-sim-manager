@@ -232,6 +232,38 @@ Begin Window winList
       Visible         =   True
       Width           =   100
    End
+   Begin PushButton btnViewSMS
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Cancel          =   False
+      Caption         =   "#kViewSMS"
+      Default         =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   244
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   False
+      MacButtonStyle  =   0
+      Scope           =   2
+      TabIndex        =   3
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   380
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   100
+   End
    Begin Label lblSelected
       AllowAutoDeactivate=   True
       Bold            =   False
@@ -245,7 +277,7 @@ Begin Window winList
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
-      Left            =   254
+      Left            =   376
       LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
@@ -265,7 +297,7 @@ Begin Window winList
       Transparent     =   False
       Underline       =   False
       Visible         =   True
-      Width           =   516
+      Width           =   473
    End
 End
 #tag EndWindow
@@ -356,6 +388,38 @@ End
 		    toUpdate.ShowWithin(self)
 		    
 		  end
+		End Sub
+	#tag EndMethod
+	
+	#tag Method, Flags = &h21
+		Private Sub ViewSMS()
+		  
+		  // get selected sims sids 
+		  // the selected sim sids are stored in the winSmsCommandsList variable selectedSimSIDs and readRequestSimSIDs
+		  // open winsmscommand window
+		  // winsmscommand window fetches the smscommands for each sim sid
+		  //   the spinner spins until all sms commands are fetched
+		  //   how:
+		  //      loop each sim sid and send a read sms command request to twilio until the readRequestSimSIDs is empty
+		  //      add all the sms commands from the response to the simsSmsCommandsList of the winSmsCommandList window
+		  //      remove the simSid from the readRequestSimSIDs
+		  
+		  System.DebugLog(  "ViewSMS called." )
+		  var taroSelection() as Twilio.Sim = GetSelection
+		  
+		  // No selection
+		  if taroSelection.Count < 1 then return
+		  
+		  var simSIDs() as String
+		  // taroSelection is in reversed order of to the sims list; reorder it back
+		  For i As Integer = taroSelection.LastRowIndex DownTo 0
+			simSIDs.Add(taroSelection(i).sSID)
+		  Next
+		  
+		  var toView as new winSmsCommandsList
+		  toView.Load(simSIDs)// initialize variables		  
+		  toView.ShowModalWithin(self)
+		  
 		End Sub
 	#tag EndMethod
 
@@ -576,7 +640,8 @@ End
 	#tag Method, Flags = &h21
 		Private Sub SetEnabledState()
 		  // Sets bulk action button states
-		  btnEdit.Enabled = false
+		  btnEdit.Enabled = false		  
+		  btnViewSMS.Enabled = false
 		  
 		  // Use the shortcut GetSelection function to count the selected rows
 		  var tiSelectedCount as Integer = GetSelection.Count
@@ -586,11 +651,13 @@ End
 		  
 		  // Set states based on selection
 		  if tiSelectedCount < 1 then
-		    btnEdit.Enabled = true
+		    btnEdit.Enabled = false
+		    btnViewSMS.Enabled = false
 		    lblSelected.Text = lbSims.RowCount.ToString + " SIMs"
 		    
 		  else
 		    btnEdit.Enabled = true
+		    btnViewSMS.Enabled = true
 		    lblSelected.Text = tiSelectedCount.ToString + " / " + lbSims.RowCount.ToString + " Selected"
 		    
 		  end
@@ -647,12 +714,19 @@ End
 	#tag Property, Flags = &h21
 		Private mbLoadedSims As Boolean
 	#tag EndProperty
+	
+	#tag Property, Flags = &h21
+		Private mbLoadedSmsCommands As Boolean
+	#tag EndProperty
 
 
 	#tag Constant, Name = kEditSim, Type = String, Dynamic = False, Default = \"Edit Sim", Scope = Private
 	#tag EndConstant
 
 	#tag Constant, Name = kEditSims, Type = String, Dynamic = False, Default = \"Edit Sims", Scope = Private
+	#tag EndConstant
+	
+	#tag Constant, Name = kViewSMS, Type = String, Dynamic = False, Default = \"View SMS", Scope = Private
 	#tag EndConstant
 
 
@@ -841,6 +915,13 @@ End
 	#tag Event
 		Sub Action()
 		  EditSelection
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events btnViewSMS
+	#tag Event
+		Sub Action()
+		  ViewSMS
 		End Sub
 	#tag EndEvent
 #tag EndEvents

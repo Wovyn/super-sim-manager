@@ -165,6 +165,42 @@ Protected Class Client
 		    // Initial request
 		    aroSims.ResizeTo(-1)
 		    toReq.Send("GET", "https://supersim.twilio.com/v1/Sims?PageSize=" + kPageSize.ToString)
+		    //toReq.Send("GET", "http://127.0.0.1:8000/api/twilio/mocksims_server")
+		    
+		  else
+		    // Subsequent page request
+		    toReq.Send("GET", tsNextPage)
+		    
+		  end
+		End Sub
+	#tag EndMethod	
+	
+	#tag Method, Flags = &h0
+		Sub FetchSMSCommands(tsNextPage as String = "", simSid as String="")
+		
+		  if( tsNextPage = "" ) then
+		    // first request for simSid
+		    System.DebugLog("FetchSMSCommands fetching SMS commands for: " + simSid)
+		    smsCommandsFetchCurrentSimSid = simSid
+		  else
+		    System.DebugLog("FetchSMSCommands fetching SMS commands for: " + tsNextPage)
+		  end
+		  // Asynchronous event to fetch all Sim resources
+		  var toReq as NetRequest = NewRequest
+		  
+		  // Handle response
+		  AddHandler toReq.Completed, WeakAddressOf SimFetchSMSCommandsResponse
+		  
+		  // Request async
+		  if tsNextPage = "" then
+		    // Initial request
+		    smsCommands.ResizeTo(-1)
+		    System.DebugLog("FetchSMSCommands: sending request to twilio..")
+		    //https://www.twilio.com/docs/iot/supersim/api/smscommand-resource#read-multiple-smscommand-resources
+		    
+		    var url as String = "https://supersim.twilio.com/v1/SmsCommands?Sim=" + simSid + "&PageSize=" + kPageSize.ToString+"&Direction=from_sim"
+		    //url = "http://127.0.0.1:8000/api/twilio/mocksmscommands_server?Sim=" + simSid
+		    toReq.Send("GET", url)
 		    
 		  else
 		    // Subsequent page request
@@ -267,6 +303,62 @@ Protected Class Client
 		    else
 		      // Process the next page
 		      ListSims(tvNextPage.StringValue)
+		      
+		    end
+		    
+		  end
+		  
+		  // Cleanup sockets
+		  SocketComplete(toSender)
+		End Sub
+	#tag EndMethod
+	
+	#tag Method, Flags = &h21
+		Private Sub SimFetchSMSCommandsResponse(toSender as Twilio.NetRequest, tdictResponse as Dictionary)
+		  // Gather the Sms command resources
+		  #pragma unused toSender
+		  
+		  System.DebugLog("SimFetchSMSCommandsResponse called." )
+		  
+		  if tdictResponse.HasKey("sms_commands") then
+		  	
+		  	System.DebugLog("SimFetchSMSCommandsResponse sms_commands found on response." )
+		    var tardictSmsCommands() as Object = tdictResponse.Value("sms_commands")
+		    
+		    if( tardictSmsCommands.Count > 0 ) then
+			    System.DebugLog("SimFetchSMSCommandsResponse sms_commands IS NOT Empty")
+			    
+			    for each tdictSmsCommand as Object in tardictSmsCommands
+			      if tdictSmsCommand isa Dictionary then
+			        System.DebugLog("SimFetchSMSCommandsResponse sms_commands is a dictionary." )
+			        var toSmsCommand as new Twilio.SmsCommand(Dictionary(tdictSmsCommand))
+			        smsCommands.Add(toSmsCommand)
+			        System.DebugLog("SimFetchSMSCommandsResponse sms_commands sid: " + toSmsCommand.sID )
+			      else
+			        System.DebugLog("SimFetchSMSCommandsResponse sms_commands is NOT a dictionary." )  
+			      end
+			      
+			    next tdictSmsCommand
+		    else
+		    	System.DebugLog("SimFetchSMSCommandsResponse sms_commands IS Empty")
+		    end
+		    
+		  end
+		  
+		  // Check for next page
+		  if tdictResponse.HasKey("meta") then
+		  	
+		    var tdictMeta as Dictionary = tdictResponse.Value("meta")
+		    var tvNextPage as Variant = tdictMeta.Lookup("next_page_url", nil)
+		    
+		    if tvNextPage = nil then
+		    	// No more pages, complete!		      
+		        RaiseEvent SimFetchSMSCommandsComplete(smsCommandsFetchCurrentSimSid) //sim_sid		      
+		      
+		    else
+		      System.DebugLog("SimFetchSMSCommandsResponse Fetch next page:" + tvNextPage.StringValue)
+		      // Process the next page
+		      FetchSMSCommands(tvNextPage.StringValue)
 		      
 		    end
 		    
@@ -404,6 +496,10 @@ Protected Class Client
 	#tag Hook, Flags = &h0
 		Event SimListComplete()
 	#tag EndHook
+	
+	#tag Hook, Flags = &h0
+		Event SimFetchSMSCommandsComplete(simSID as String)
+	#tag EndHook
 
 	#tag Hook, Flags = &h0
 		Event SimUpdateSuccess(toSim as Twilio.Sim)
@@ -421,6 +517,15 @@ Protected Class Client
 	#tag Property, Flags = &h0
 		aroSims() As Twilio.Sim
 	#tag EndProperty
+	
+	#tag Property, Flags = &h0
+		smsCommands() As Twilio.SmsCommand
+	#tag EndProperty
+	
+	#tag Property, Flags = &h0
+		smsCommandsFetchCurrentSimSid As String
+	#tag EndProperty
+	
 
 	#tag Property, Flags = &h21
 		Private maroRequests() As NetRequest
