@@ -165,6 +165,7 @@ Protected Class Client
 		    // Initial request
 		    aroSims.ResizeTo(-1)
 		    toReq.Send("GET", "https://supersim.twilio.com/v1/Sims?PageSize=" + kPageSize.ToString)
+		    //toReq.Send("GET", "http://127.0.0.1:8000/api/twilio/mocksims_server")
 		    
 		  else
 		    // Subsequent page request
@@ -198,7 +199,7 @@ Protected Class Client
 		    //https://www.twilio.com/docs/iot/supersim/api/smscommand-resource#read-multiple-smscommand-resources
 		    
 		    var url as String = "https://supersim.twilio.com/v1/SmsCommands?Sim=" + simSid + "&PageSize=" + kPageSize.ToString+"&Direction=from_sim"
-		    //url = "http://127.0.0.1:8000/api/twilio/mocksmscommands_server"
+		    //url = "http://127.0.0.1:8000/api/twilio/mocksmscommands_server?Sim=" + simSid
 		    toReq.Send("GET", url)
 		    
 		  else
@@ -347,16 +348,15 @@ Protected Class Client
 		  // Check for next page
 		  if tdictResponse.HasKey("meta") then
 		  	
-		  	System.DebugLog("SimFetchSMSCommandsResponse tdictResponse has meta")
-		  	
 		    var tdictMeta as Dictionary = tdictResponse.Value("meta")
 		    var tvNextPage as Variant = tdictMeta.Lookup("next_page_url", nil)
 		    
 		    if tvNextPage = nil then
-		      // No more pages, complete!		      
+		    	// No more pages, complete!		      
 		        RaiseEvent SimFetchSMSCommandsComplete(smsCommandsFetchCurrentSimSid) //sim_sid		      
 		      
 		    else
+		      System.DebugLog("SimFetchSMSCommandsResponse Fetch next page:" + tvNextPage.StringValue)
 		      // Process the next page
 		      FetchSMSCommands(tvNextPage.StringValue)
 		      

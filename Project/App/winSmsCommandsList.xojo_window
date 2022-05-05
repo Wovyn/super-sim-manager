@@ -211,34 +211,26 @@ End
 	#tag Method, Flags = &h21
 		Private Sub FetchSmsCommands()
 			
-			System.DebugLog("winSmsCommands FetchSmsCommands called.")
-			
 			// Reset load flags
 			mbAuthenticationFailed = false
-			// fetch the smscommands for each sim sid on
-			//	the spinner spins until all sms commands are fetched
+			// fetch the smscommands for each sim sid 
+			//	the spinner spins until all sms commands are fetched amd the list loaded
 			//	how:
 			//		get the first sim sid from the readRequestSimSIDs(removing the item from the array after storing the sim id)
 			//		get from twilio the sms commands for the sim sid (oClient.FetchSMSCommands("", simSid))		
-			//		the oClient request success event will call the function that 
+			//		the oClient request success event will call the function(Twilio/Client.SimFetchSMSCommandsResponse) that 
 			//			will add all the sms commands from the response to the simsSmsCommandsList of the winSmsCommandList window
 			//			the event function will check if there are more sims ids to process
-			//				if there are it will call oClient.FetchSMSCommands("", simSid) once more, the simSid new first item on the readRequestSimSIDs
-			//				if there are no more items to process stop the spinner and re-enable the reload button
+			//				if there are, it will call oClient.FetchSMSCommands("", simSid) once more, with the new first item on the readRequestSimSIDs as simSid
+			//				if there are no more items to process, stop the spinner and re-enable the reload button
 			//		if there is an error and it can be retried, the oClient request error event will call the function that
 			//			will add the sim sid back to the readRequestSimSIDs and retry the request?
+			//  load the sms commands to the list(LoadSmsCommandsList)
 			
-			if readRequestSimSIDs.Count = 0 then
-				System.DebugLog("winSmsCommands FetchSmsCommands: All readRequestSimSIDs has been processed.")
-			else
-			
-				var simSid as String = readRequestSimSIDs(0)
-				System.DebugLog("winSmsCommands FetchSmsCommands called for sim sid: " + simSid)
-				readRequestSimSIDs.RemoveAt(0)
-				oClient.FetchSMSCommands("", simSid)
-			//System.DebugLog("winSmsCommands FetchSmsCommands: after calling oClient.FetchSMSCommands")
-			
-			end
+			var simSid as String = readRequestSimSIDs(0)
+			System.DebugLog("winSmsCommands FetchSmsCommands called for sim sid: " + simSid)
+			readRequestSimSIDs.RemoveAt(0)
+			oClient.FetchSMSCommands("", simSid)
 			
 		End Sub
 	#tag EndMethod
@@ -251,8 +243,8 @@ End
 			 
 			 // Correct sort indicator
 			 smsCommandsListBox.HasHeader = false
-			 smsCommandsListBox.SortingColumn = 4
-			 smsCommandsListBox.ColumnSortDirectionAt(4) = Listbox.SortDirections.Descending
+			 smsCommandsListBox.SortingColumn = 5
+			 smsCommandsListBox.ColumnSortDirectionAt(5) = Listbox.SortDirections.Descending
 			 smsCommandsListBox.HasHeader = true
 			 var tiScrollPosition as Integer = smsCommandsListBox.ScrollPosition
 			 
@@ -327,17 +319,16 @@ End
 				
 				simsSmsCommandsList.Add(smsCommand) 				
 			Next smsCommand
-			
-			System.DebugLog("winSmsCommandsList readRequestSimSIDs count: " + readRequestSimSIDs.Count.ToString)
 
 		 	if( readRequestSimSIDs.Count = 0 ) then
 				// all sim's sms commands were fetched
-				System.DebugLog("winSmsCommandsList SimFetchSMSCommandsComplete ALL sims sms commands fetched!" )
+				System.DebugLog("winSmsCommandsList SimFetchSMSCommandsComplete ALL sims processed!" )
 				btnReload.Enabled = true
 				pwWait.Visible = false 
 				// load items to List
 				LoadSmsCommandsList
 			else
+				System.DebugLog("winSmsCommandsList " + readRequestSimSIDs.Count.ToString + " more sims to process.")
 				FetchSmsCommands	
 			end
 		 
