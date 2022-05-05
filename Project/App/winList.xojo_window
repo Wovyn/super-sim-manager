@@ -232,38 +232,6 @@ Begin Window winList
       Visible         =   True
       Width           =   100
    End
-   Begin PushButton btnSendSMS
-      AllowAutoDeactivate=   True
-      Bold            =   False
-      Cancel          =   False
-      Caption         =   "#kSendSMS"
-      Default         =   False
-      Enabled         =   True
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
-      Height          =   20
-      Index           =   -2147483648
-      InitialParent   =   ""
-      Italic          =   False
-      Left            =   132
-      LockBottom      =   True
-      LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   False
-      MacButtonStyle  =   0
-      Scope           =   2
-      TabIndex        =   3
-      TabPanelIndex   =   0
-      TabStop         =   True
-      Tooltip         =   ""
-      Top             =   380
-      Transparent     =   False
-      Underline       =   False
-      Visible         =   True
-      Width           =   100
-   End
    Begin PushButton btnViewSMS
       AllowAutoDeactivate=   True
       Bold            =   False
@@ -424,16 +392,6 @@ End
 	#tag EndMethod
 	
 	#tag Method, Flags = &h21
-		Private Sub SendSMS()
-		  System.DebugLog(  "SendSMS called." )
-		  var taroSelection() as Twilio.Sim = GetSelection
-		  
-		  // No selection
-		  if taroSelection.Count < 1 then return
-		End Sub
-	#tag EndMethod
-	
-	#tag Method, Flags = &h21
 		Private Sub ViewSMS()
 		  
 		  // get selected sims sids 
@@ -453,12 +411,10 @@ End
 		  if taroSelection.Count < 1 then return
 		  
 		  var simSIDs() as String
-		  For Each sim As Twilio.Sim In taroSelection
-			  System.DebugLog("Selected Sim sSID: " + sim.sSID)
-			  // https://www.twilio.com/docs/iot/supersim/api/smscommand-resource#read-multiple-smscommand-resources
-			  simSIDs.add(sim.sSID)
-			  
-		  Next sim
+		  // taroSelection is in reversed order of to the sims list; reorder it back
+		  For i As Integer = taroSelection.LastRowIndex DownTo 0
+			simSIDs.Add(taroSelection(i).sSID)
+		  Next
 		  
 		  var toView as new winSmsCommandsList
 		  toView.Load(simSIDs)// initialize variables		  
@@ -684,8 +640,7 @@ End
 	#tag Method, Flags = &h21
 		Private Sub SetEnabledState()
 		  // Sets bulk action button states
-		  btnEdit.Enabled = false
-		  btnSendSMS.Enabled = false
+		  btnEdit.Enabled = false		  
 		  btnViewSMS.Enabled = false
 		  
 		  // Use the shortcut GetSelection function to count the selected rows
@@ -697,13 +652,11 @@ End
 		  // Set states based on selection
 		  if tiSelectedCount < 1 then
 		    btnEdit.Enabled = false
-		    btnSendSMS.Enabled = false
 		    btnViewSMS.Enabled = false
 		    lblSelected.Text = lbSims.RowCount.ToString + " SIMs"
 		    
 		  else
 		    btnEdit.Enabled = true
-		    btnSendSMS.Enabled = true
 		    btnViewSMS.Enabled = true
 		    lblSelected.Text = tiSelectedCount.ToString + " / " + lbSims.RowCount.ToString + " Selected"
 		    
@@ -771,9 +724,6 @@ End
 	#tag EndConstant
 
 	#tag Constant, Name = kEditSims, Type = String, Dynamic = False, Default = \"Edit Sims", Scope = Private
-	#tag EndConstant
-	
-	#tag Constant, Name = kSendSMS, Type = String, Dynamic = False, Default = \"Send SMS", Scope = Private
 	#tag EndConstant
 	
 	#tag Constant, Name = kViewSMS, Type = String, Dynamic = False, Default = \"View SMS", Scope = Private
@@ -965,13 +915,6 @@ End
 	#tag Event
 		Sub Action()
 		  EditSelection
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events btnSendSMS
-	#tag Event
-		Sub Action()
-		  SendSMS
 		End Sub
 	#tag EndEvent
 #tag EndEvents
